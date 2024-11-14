@@ -76,6 +76,10 @@ void AFireFighter::Tick(float DeltaSeconds)
 		{
 			//pickedUpItem->SetActorLocation()
 		}
+		else
+		{
+			pickedUpItem->SetActorLocation(_PickedUpObjAnchor->GetComponentLocation());
+		}
 	}
 }
 
@@ -159,7 +163,7 @@ void AFireFighter::PickupAction(const FInputActionValue& Value)
 					pickedUpItem = Cast<APickUpActor>(pickedUp);
 					PickUpTool(pickedUp);
 				}
-				if (pickedUp->IsA<APickUpActor>())
+				else
 				{
 					pickedUpItem = Cast<APickUpActor>(pickedUp);
 					PickUpObject(pickedUp);

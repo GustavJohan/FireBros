@@ -1,4 +1,6 @@
 ﻿#include "FireFighter.h"
+
+#include "BreakableObject.h"
 #include "EnhancedInputComponent.h"
 #include "InputAction.h"
 #include "InputMappingContext.h"
@@ -24,6 +26,9 @@ AFireFighter::AFireFighter()
 
 	_PickUpObjHitBox = CreateDefaultSubobject<UBoxComponent>("pickup Box");
 	_PickUpObjHitBox->SetupAttachment(RootComponent);
+
+	_HitObjBox = CreateDefaultSubobject<UBoxComponent>("hit Box");
+	_HitObjBox->SetupAttachment(RootComponent);
 }
 
 void AFireFighter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -37,6 +42,7 @@ void AFireFighter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	if (_look){Input->BindAction(_look, ETriggerEvent::Triggered, this, &AFireFighter::LookAction);}
 	if (_jump){Input->BindAction(_jump, ETriggerEvent::Triggered, this, &AFireFighter::JumpAction);}
 	if (_pickUp){Input->BindAction(_pickUp, ETriggerEvent::Triggered, this, &AFireFighter::PickupAction);}
+	if (_hitObj){Input->BindAction(_hitObj, ETriggerEvent::Started, this, &AFireFighter::HitObjAction);}
 }
 
 void AFireFighter::BeginPlay()
@@ -101,14 +107,14 @@ void AFireFighter::MoveAction(const FInputActionValue& Value)
 	AddMovementInput(ForwardDirection, inputVector.Y);
 	AddMovementInput(RightDirection,   inputVector.X);
 
-	GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow, "Moving");
+	//GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow, "Moving");
 	//AddMovementInput(_CameraArmComponent->GetForwardVector(),inputVector.Y);
 	//AddMovementInput(_CameraArmComponent->GetRightVector(), inputVector.X);
 }
 
 void AFireFighter::LookAction(const FInputActionValue& Value)
 {
-	FVector2d inputVector = Value.Get<FVector2d>();
+	FVector2d inputVector = -Value.Get<FVector2d>();
 
 	//GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow, inputVector.ToString());
 	
@@ -173,4 +179,37 @@ void AFireFighter::PickupAction(const FInputActionValue& Value)
 		}
 		
 	}
+}
+
+void AFireFighter::HitObjAction(const FInputActionValue& Value)
+{
+	TArray<AActor*> hitObjs;
+
+	HitObj();
+	
+	_HitObjBox->GetOverlappingActors(hitObjs);
+
+	for (AActor* HitObj : hitObjs)
+	{
+		GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Green, "break");
+		if (HitObj->IsA<ABreakableObject>())
+		{
+			//Cast<ABreakableObject>(HitObj)->BreakObjectToServer_Implementation()
+			GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Cyan, "break firefighter to server");
+			//HitObj->SetOwner(GetController());
+			BreakObjectRPCToServerFromFireFighter(Cast<ABreakableObject>(HitObj));
+				
+			
+		}
+	}
+}
+
+void AFireFighter::BreakObjectRPCToServerFromFireFighter_Implementation(ABreakableObject* objectToBreak)
+{
+	FVector direction = objectToBreak->GetActorLocation() - GetActorLocation();
+	direction.Normalize();
+	direction += FVector::UpVector;
+	direction.Normalize();
+
+	objectToBreak->BreakObjectMulticast(direction);
 }

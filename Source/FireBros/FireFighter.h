@@ -4,6 +4,7 @@
 #include "GameFramework/Character.h"
 #include "FireFighter.generated.h"
 
+class ABreakableObject;
 class UBoxComponent;
 class AFireFighterRagdoll;
 class USpringArmComponent;
@@ -21,6 +22,7 @@ public:
 	UPROPERTY(EditAnywhere, Category=input) UInputAction* _look;
 	UPROPERTY(EditAnywhere, Category=input) UInputAction* _jump;
 	UPROPERTY(EditAnywhere, Category=input) UInputAction* _pickUp;
+	UPROPERTY(EditAnywhere, Category=input) UInputAction* _hitObj;
 
 	UPROPERTY(EditAnywhere, Category=Input) TSoftObjectPtr<UInputMappingContext> _defaultInputMapping;
 
@@ -28,6 +30,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) USceneComponent*				_RagdollMeshAnchor  = nullptr;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) USceneComponent*				_PickedUpObjAnchor  = nullptr;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) UBoxComponent*				_PickUpObjHitBox    = nullptr;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) UBoxComponent*				_HitObjBox		    = nullptr;
 
 	UPROPERTY(EditDefaultsOnly) USkeletalMesh* RagdollMesh;
 	UPROPERTY(EditDefaultsOnly) TSubclassOf<AFireFighterRagdoll> ragdollActorClass;
@@ -39,11 +42,13 @@ public:
 	
 	UFUNCTION(BlueprintImplementableEvent) void PickUpTool  (AActor* PickedUp);
 	UFUNCTION(BlueprintImplementableEvent) void PickUpObject(AActor* PickedUp);
+	UFUNCTION(BlueprintImplementableEvent) void HitObj();
 private:
 	void MoveAction       (const FInputActionValue& Value);
 	void LookAction       (const FInputActionValue& Value);
 	void JumpAction       (const FInputActionValue& Value);
 	void PickupAction     (const FInputActionValue& Value);
+	void HitObjAction	  (const FInputActionValue& Value);
 
 	void BeginPlay() override;
 	void Tick(float DeltaSeconds) override;
@@ -52,6 +57,9 @@ private:
 	
 	UFUNCTION(BlueprintCallable, NetMulticast, Reliable) void beginRagdoll(float ragdollTime = 5);
 	UFUNCTION(BlueprintCallable, NetMulticast, Reliable) void endRagdoll();
+
+	UFUNCTION(Server, Reliable) void BreakObjectRPCToServerFromFireFighter(ABreakableObject* objectToBreak);
+
 
 protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

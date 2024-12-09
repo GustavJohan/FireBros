@@ -46,14 +46,18 @@ void AFireFighterRagdoll::SetRagdollMesh(USkeletalMesh* mesh, ACharacter* Owning
 }
 
 
-void AFireFighterRagdoll::BeginCharacterRagdoll()
+void AFireFighterRagdoll::BeginCharacterRagdoll_Implementation()
 {
+	//if (!HasAuthority()){return;}
 	isRagdolling = true;
 	
 	_RagdollMesh->SetSimulatePhysics(false);
 	_RagdollMesh->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 	_RagdollMesh->SetWorldLocation(GetActorLocation(), false, nullptr, ETeleportType::ResetPhysics);
-	if (GIsServer)
+
+	RagdollClient();
+	
+	if (HasAuthority())
 	{
 		_RagdollMesh->SetSimulatePhysics(true);
 	}
@@ -61,11 +65,16 @@ void AFireFighterRagdoll::BeginCharacterRagdoll()
 	_RagdollMesh->SetVisibility(true);
 }
 
-void AFireFighterRagdoll::EndCharacterRagdoll()
+void AFireFighterRagdoll::EndCharacterRagdoll_Implementation()
 {
+	//if (!HasAuthority()){return;}
 	isRagdolling = false;
 	
 	_RagdollMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	_RagdollMesh->SetSimulatePhysics(false);
+
+	if (HasAuthority())
+	{
+		_RagdollMesh->SetSimulatePhysics(false);
+	}
 	_RagdollMesh->SetVisibility(false);
 }

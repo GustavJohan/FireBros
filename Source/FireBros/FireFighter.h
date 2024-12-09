@@ -17,6 +17,7 @@ class FIREBROS_API AFireFighter : public ACharacter
 {
 	GENERATED_BODY()
 	AFireFighter();
+
 public:
 	UPROPERTY(EditAnywhere, Category=input) UInputAction* _move;
 	UPROPERTY(EditAnywhere, Category=input) UInputAction* _look;
@@ -35,6 +36,8 @@ public:
 	UPROPERTY(EditDefaultsOnly) USkeletalMesh* RagdollMesh;
 	UPROPERTY(EditDefaultsOnly) TSubclassOf<AFireFighterRagdoll> ragdollActorClass;
 	UPROPERTY() AFireFighterRagdoll* ragdollActor;
+	//UPROPERTY(ReplicatedUsing=RagDollActorSet) AFireFighterRagdoll* ragdollActor;
+	//UFUNCTION() void RagDollActorSet();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) APickUpActor* pickedUpItem = nullptr;
 	
@@ -54,11 +57,17 @@ private:
 	void Tick(float DeltaSeconds) override;
 
 	FTimerHandle resetRagdoll;
+
 	
 	UFUNCTION(BlueprintCallable, NetMulticast, Reliable) void beginRagdoll(float ragdollTime = 5);
 	UFUNCTION(BlueprintCallable, NetMulticast, Reliable) void endRagdoll();
 
+	UFUNCTION(Client, Reliable) void SetCameraPositionOnClient(FVector pos);
+	
 	UFUNCTION(Server, Reliable) void BreakObjectRPCToServerFromFireFighter(ABreakableObject* objectToBreak);
+	
+	UFUNCTION(Server, Reliable) void SpawnRagdollRPCToServer();
+	UFUNCTION(Server, NetMulticast, Reliable) void setUpRagdollRPCMulticast(AFireFighterRagdoll* Ragdoll);
 
 
 protected:

@@ -30,7 +30,8 @@ public:
 
 	void SetRagdollMesh(USkeletalMesh* mesh, ACharacter* OwningCharacter);
 	
-	void BeginCharacterRagdoll();
-	void EndCharacterRagdoll();
+	UFUNCTION(NetMulticast, Reliable)void BeginCharacterRagdoll();
+	UFUNCTION(NetMulticast, Reliable)void EndCharacterRagdoll();
 
+	UFUNCTION(BlueprintImplementableEvent) void RagdollClient();
 };

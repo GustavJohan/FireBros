@@ -10,7 +10,9 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/BoxComponent.h"
 #include "Tool.h"
-
+#include "Net/UnrealNetwork.h"
+#include "Engine/Light.h"
+#include "GameFramework/GameSession.h"
 
 AFireFighter::AFireFighter()
 {
@@ -30,6 +32,23 @@ AFireFighter::AFireFighter()
 	_HitObjBox = CreateDefaultSubobject<UBoxComponent>("hit Box");
 	_HitObjBox->SetupAttachment(RootComponent);
 }
+
+/*
+void AFireFighter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	//look into setting ownership to server instead of this terribleness
+	DOREPLIFETIME(AFireFighter, ragdollActor);
+}
+
+
+void AFireFighter::RagDollActorSet()
+{
+	ragdollActor->SetRagdollMesh(RagdollMesh, this);
+	GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Purple, "ragdoll mesh set");
+}
+*/
 
 void AFireFighter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -55,10 +74,30 @@ void AFireFighter::BeginPlay()
 			Subsystem->AddMappingContext(_defaultInputMapping.LoadSynchronous(), 0);
 		}
 	}
+	
+	SpawnRagdollRPCToServer();
+}
 
+void AFireFighter::SpawnRagdollRPCToServer_Implementation()
+{
 	ragdollActor = GetWorld()->SpawnActor<AFireFighterRagdoll>(ragdollActorClass);
 	ragdollActor->SetRagdollMesh(RagdollMesh, this);
+	//ragdollActor->SetOwner(GetPlayerControllerFromNetId(GetWorld(), 0));
+	//setUpRagdollRPCMulticast(ragdollActor);
 }
+
+void AFireFighter::setUpRagdollRPCMulticast_Implementation(AFireFighterRagdoll* Ragdoll)
+{
+	if (ragdollActor == nullptr)
+	{
+		ragdollActor = Ragdoll;
+	}
+	
+	//Ragdoll->SetRagdollMesh(RagdollMesh, this);
+	
+}
+
+
 
 void AFireFighter::Tick(float DeltaSeconds)
 {
@@ -66,14 +105,29 @@ void AFireFighter::Tick(float DeltaSeconds)
 
 	if (!_isRagDolling)
 	{
+		_CameraArmComponent->SetWorldLocation(GetActorLocation());
+	}
+	
+	if (!ragdollActor){return;}
+
+	if (!_isRagDolling)
+	{
 		//_RagdollMesh->SetWorldTransform(_RagdollMeshAnchor->GetComponentTransform());
 		_CameraArmComponent->SetWorldLocation(GetActorLocation());
 		ragdollActor->SetActorTransform(_RagdollMeshAnchor->GetComponentTransform());
+		
 	}
 	else
 	{
-		_CameraArmComponent->SetWorldLocation(ragdollActor->GetActorLocation() + FVector::UpVector*50);
-		//GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow, _RagdollMesh->GetComponentLocation().ToString());
+		if (ragdollActor)
+		{
+			SetCameraPositionOnClient(ragdollActor->GetActorLocation());
+		}
+		else
+		{
+			_CameraArmComponent->SetWorldLocation(ragdollActor->GetActorLocation() + FVector::UpVector*50);
+		}
+		
 	}
 
 	if (pickedUpItem)
@@ -119,7 +173,7 @@ void AFireFighter::LookAction(const FInputActionValue& Value)
 	//GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow, inputVector.ToString());
 	
 	AddControllerPitchInput(inputVector.Y);
-	AddControllerYawInput  (inputVector.X);
+	AddControllerYawInput  (-inputVector.X);
 }
 
 void AFireFighter::JumpAction(const FInputActionValue& Value)
@@ -131,20 +185,22 @@ void AFireFighter::beginRagdoll_Implementation(float ragdollTime)
 {
 	GetMesh()->SetVisibility(false);
 	_isRagDolling = true;
-	ragdollActor->BeginCharacterRagdoll();
 
 	
 	GetWorld()->GetTimerManager().SetTimer(resetRagdoll, FTimerDelegate::CreateLambda(
-		[this] {endRagdoll_Implementation();}), ragdollTime, false);
+		[this] {endRagdoll();}), ragdollTime, false);
+	if (!ragdollActor){return;}
+	ragdollActor->BeginCharacterRagdoll();
 }
 
 void AFireFighter::endRagdoll_Implementation()
 {
-	//SetReplicates(true);
-	//GetMovementComponent()->Activate();
 	
 	GetMesh()->SetVisibility(true);
 	_isRagDolling = false;
+	
+	if (!ragdollActor){return;}
+	
 	ragdollActor->EndCharacterRagdoll();
 	SetActorLocation(ragdollActor->GetActorLocation());
 }
@@ -212,4 +268,10 @@ void AFireFighter::BreakObjectRPCToServerFromFireFighter_Implementation(ABreakab
 	direction.Normalize();
 
 	objectToBreak->BreakObjectMulticast(direction);
+}
+
+void AFireFighter::SetCameraPositionOnClient_Implementation(FVector pos)
+{
+	_CameraArmComponent->SetWorldLocation(pos + FVector::UpVector*50);
+	GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow, "Ragdolling");
 }

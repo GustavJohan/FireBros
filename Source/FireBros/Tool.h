@@ -13,5 +13,7 @@ UCLASS()
 class FIREBROS_API ATool : public APickUpActor
 {
 	GENERATED_BODY()
-	
+public:
+	UFUNCTION(Server	  , Reliable) virtual void UseToolToServer();
+	UFUNCTION(NetMulticast, Reliable) virtual void UseToolMulticast();
 };

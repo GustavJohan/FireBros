@@ -50,7 +50,6 @@ private:
 	void MoveAction       (const FInputActionValue& Value);
 	void LookAction       (const FInputActionValue& Value);
 	void JumpAction       (const FInputActionValue& Value);
-	void PickupAction     (const FInputActionValue& Value);
 	void HitObjAction	  (const FInputActionValue& Value);
 
 	void BeginPlay() override;
@@ -67,8 +66,12 @@ private:
 	UFUNCTION(Server, Reliable) void BreakObjectRPCToServerFromFireFighter(ABreakableObject* objectToBreak);
 	
 	UFUNCTION(Server, Reliable) void SpawnRagdollRPCToServer();
-	UFUNCTION(Server, NetMulticast, Reliable) void setUpRagdollRPCMulticast(AFireFighterRagdoll* Ragdoll);
 
+
+	void PickupAction     (const FInputActionValue& Value);
+	
+	UFUNCTION(Server, Reliable) void pickupToServer();
+	UFUNCTION(NetMulticast, Reliable) void pickupMulticast();
 
 protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

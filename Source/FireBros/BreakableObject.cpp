@@ -69,13 +69,14 @@ void ABreakableObject::BreakObjectMulticast_Implementation(FVector direction)
 		EFieldFilterType::Field_Filter_All,
 		EFieldObjectType::Field_Object_All,
 		EFieldPositionType::Field_Position_CenterOfMass);
+	
 
 	
 	TObjectPtr<URadialVector> ExplodingForce = NewObject<URadialVector>();
 	ExplodingForce->Position = GetActorLocation();
 	ExplodingForce->Magnitude = 50;
 	shatterObject->ApplyPhysicsField(true, EGeometryCollectionPhysicsTypeEnum::Chaos_LinearVelocity, MetaData.Get(), ExplodingForce.Get());
-	
+	GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow, direction.ToString());
 
 	TObjectPtr<UUniformVector> pushingForce = NewObject<UUniformVector>();
 	pushingForce->Magnitude = 300;

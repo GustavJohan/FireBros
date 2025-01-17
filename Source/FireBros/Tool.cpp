@@ -3,3 +3,13 @@
 
 #include "Tool.h"
 
+void ATool::UseToolToServer_Implementation()
+{
+	
+}
+
+void ATool::UseToolMulticast_Implementation()
+{
+	
+}
+

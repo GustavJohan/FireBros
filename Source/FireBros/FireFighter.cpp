@@ -37,16 +37,7 @@ AFireFighter::AFireFighter()
 void AFireFighter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-
-	//look into setting ownership to server instead of this terribleness
-	DOREPLIFETIME(AFireFighter, ragdollActor);
-}
-
-
-void AFireFighter::RagDollActorSet()
-{
-	ragdollActor->SetRagdollMesh(RagdollMesh, this);
-	GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Purple, "ragdoll mesh set");
+	DOREPLIFETIME();
 }
 */
 
@@ -82,19 +73,6 @@ void AFireFighter::SpawnRagdollRPCToServer_Implementation()
 {
 	ragdollActor = GetWorld()->SpawnActor<AFireFighterRagdoll>(ragdollActorClass);
 	ragdollActor->SetRagdollMesh(RagdollMesh, this);
-	//ragdollActor->SetOwner(GetPlayerControllerFromNetId(GetWorld(), 0));
-	//setUpRagdollRPCMulticast(ragdollActor);
-}
-
-void AFireFighter::setUpRagdollRPCMulticast_Implementation(AFireFighterRagdoll* Ragdoll)
-{
-	if (ragdollActor == nullptr)
-	{
-		ragdollActor = Ragdoll;
-	}
-	
-	//Ragdoll->SetRagdollMesh(RagdollMesh, this);
-	
 }
 
 
@@ -112,10 +90,8 @@ void AFireFighter::Tick(float DeltaSeconds)
 
 	if (!_isRagDolling)
 	{
-		//_RagdollMesh->SetWorldTransform(_RagdollMeshAnchor->GetComponentTransform());
 		_CameraArmComponent->SetWorldLocation(GetActorLocation());
 		ragdollActor->SetActorTransform(_RagdollMeshAnchor->GetComponentTransform());
-		
 	}
 	else
 	{
@@ -127,18 +103,18 @@ void AFireFighter::Tick(float DeltaSeconds)
 		{
 			_CameraArmComponent->SetWorldLocation(ragdollActor->GetActorLocation() + FVector::UpVector*50);
 		}
-		
 	}
 
 	if (pickedUpItem)
 	{
 		if (pickedUpItem->IsA<ATool>())
 		{
-			//pickedUpItem->SetActorLocation()
+			
 		}
 		else
 		{
 			pickedUpItem->SetActorLocation(_PickedUpObjAnchor->GetComponentLocation());
+			pickedUpItem->SetActorRotation(_PickedUpObjAnchor->GetComponentRotation());
 		}
 	}
 }
@@ -150,20 +126,17 @@ void AFireFighter::MoveAction(const FInputActionValue& Value)
 
 	const FRotator Rotation = Controller->GetControlRotation();
 	const FRotator YawRotation(0, Rotation.Yaw, 0);
+	const FRotator RollPitch(Rotation.Roll, 0, Rotation.Pitch);
 
 	// get forward vector
 	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 	
 	// get right vector 
+	//const FVector RightDirection = FRotationMatrix(RollPitch).GetUnitAxis(EAxis::Y);
 	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-	
 	
 	AddMovementInput(ForwardDirection, inputVector.Y);
 	AddMovementInput(RightDirection,   inputVector.X);
-
-	//GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow, "Moving");
-	//AddMovementInput(_CameraArmComponent->GetForwardVector(),inputVector.Y);
-	//AddMovementInput(_CameraArmComponent->GetRightVector(), inputVector.X);
 }
 
 void AFireFighter::LookAction(const FInputActionValue& Value)
@@ -207,13 +180,23 @@ void AFireFighter::endRagdoll_Implementation()
 
 void AFireFighter::PickupAction(const FInputActionValue& Value)
 {
+	pickupToServer();
+}
+
+void AFireFighter::pickupToServer_Implementation()
+{
+	pickupMulticast();
+}
+
+void AFireFighter::pickupMulticast_Implementation()
+{
 	GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow, "pickup");
-
+    
 	if (pickedUpItem){return;}
-
+    
 	TArray<AActor*> actorsInBounds;
 	_PickUpObjHitBox->GetOverlappingActors(actorsInBounds);
-	
+    	
 	for (AActor* pickedUp : actorsInBounds)
 	{
 		if (pickedUp->IsA<APickUpActor>())
@@ -229,45 +212,35 @@ void AFireFighter::PickupAction(const FInputActionValue& Value)
 				{
 					pickedUpItem = Cast<APickUpActor>(pickedUp);
 					PickUpObject(pickedUp);
+					pickedUpItem->SetActorEnableCollision(false);
 				}
 			}
-			
 		}
-		
 	}
 }
 
+
+
 void AFireFighter::HitObjAction(const FInputActionValue& Value)
 {
-	TArray<AActor*> hitObjs;
-
-	HitObj();
 	
-	_HitObjBox->GetOverlappingActors(hitObjs);
 
-	for (AActor* HitObj : hitObjs)
-	{
-		GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Green, "break");
-		if (HitObj->IsA<ABreakableObject>())
-		{
-			//Cast<ABreakableObject>(HitObj)->BreakObjectToServer_Implementation()
-			GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Cyan, "break firefighter to server");
-			//HitObj->SetOwner(GetController());
-			BreakObjectRPCToServerFromFireFighter(Cast<ABreakableObject>(HitObj));
-				
-			
-		}
-	}
+	if (!pickedUpItem){return;}
+	GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow, "Tool Used");
+
+	BreakObjectRPCToServerFromFireFighter(nullptr);
+	
 }
 
 void AFireFighter::BreakObjectRPCToServerFromFireFighter_Implementation(ABreakableObject* objectToBreak)
 {
-	FVector direction = objectToBreak->GetActorLocation() - GetActorLocation();
+	Cast<ATool>(pickedUpItem)->UseToolToServer();
+	/*FVector direction = objectToBreak->GetActorLocation() - GetActorLocation();
 	direction.Normalize();
 	direction += FVector::UpVector;
 	direction.Normalize();
 
-	objectToBreak->BreakObjectMulticast(direction);
+	objectToBreak->BreakObjectMulticast(direction);*/
 }
 
 void AFireFighter::SetCameraPositionOnClient_Implementation(FVector pos)

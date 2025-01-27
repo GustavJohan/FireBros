@@ -10,7 +10,6 @@
 AAxeTool::AAxeTool()
 {
 	AxeHitBox = CreateDefaultSubobject<UBoxComponent>("hitBox");
-	AxeHitBox->SetupAttachment(RootComponent);
 }
 
 

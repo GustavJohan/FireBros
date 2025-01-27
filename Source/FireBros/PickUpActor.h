@@ -24,4 +24,11 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(BlueprintReadOnly) bool pickedUp = false;
+
+	UFUNCTION() void pickupActor();
+	UFUNCTION() void discardActor();
+
+	UStaticMeshComponent* ObjectMesh = nullptr;
+
+	UFUNCTION() void throwActor(FVector impulseDirection);
 };

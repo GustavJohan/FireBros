@@ -36,24 +36,30 @@ public:
 	UPROPERTY(EditDefaultsOnly) USkeletalMesh* RagdollMesh;
 	UPROPERTY(EditDefaultsOnly) TSubclassOf<AFireFighterRagdoll> ragdollActorClass;
 	UPROPERTY() AFireFighterRagdoll* ragdollActor;
+
+	UPROPERTY(EditDefaultsOnly, Category="Player Stat") int throwStrength = 100;
 	//UPROPERTY(ReplicatedUsing=RagDollActorSet) AFireFighterRagdoll* ragdollActor;
 	//UFUNCTION() void RagDollActorSet();
-
+	
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) APickUpActor* pickedUpItem = nullptr;
 	
 	bool _isRagDolling = false;
 	
-	UFUNCTION(BlueprintImplementableEvent) void PickUpTool  (AActor* PickedUp);
-	UFUNCTION(BlueprintImplementableEvent) void PickUpObject(AActor* PickedUp);
 	UFUNCTION(BlueprintImplementableEvent) void HitObj();
+	UFUNCTION(BlueprintImplementableEvent) void PickUpTool(AActor* PickedUp);
+	UFUNCTION(BlueprintImplementableEvent) void DiscardTool  (AActor* Discarded);
+	UFUNCTION(BlueprintImplementableEvent) void PickUpObject(AActor* PickedUp);
+	UFUNCTION(BlueprintImplementableEvent) void DiscardObject(AActor* Discarded);
 private:
 	void MoveAction       (const FInputActionValue& Value);
 	void LookAction       (const FInputActionValue& Value);
 	void JumpAction       (const FInputActionValue& Value);
-	void HitObjAction	  (const FInputActionValue& Value);
+	void UseToolAction	  (const FInputActionValue& Value);
 
 	void BeginPlay() override;
 	void Tick(float DeltaSeconds) override;
+	void AsyncPhysicsTickActor(float DeltaTime, float SimTime) override;
 
 	FTimerHandle resetRagdoll;
 
@@ -63,7 +69,7 @@ private:
 
 	UFUNCTION(Client, Reliable) void SetCameraPositionOnClient(FVector pos);
 	
-	UFUNCTION(Server, Reliable) void BreakObjectRPCToServerFromFireFighter(ABreakableObject* objectToBreak);
+	UFUNCTION(Server, Reliable) void UseToolRPCToServerFromFireFighter();
 	
 	UFUNCTION(Server, Reliable) void SpawnRagdollRPCToServer();
 
@@ -72,6 +78,12 @@ private:
 	
 	UFUNCTION(Server, Reliable) void pickupToServer();
 	UFUNCTION(NetMulticast, Reliable) void pickupMulticast();
+
+	
+	FVector2f PrevCameraRot;
+	TArray<FRotator, TFixedAllocator<60>> CameraMovementLog;
+	int cameraMovementLogCurrent = 0;
+	
 
 protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

@@ -11,11 +11,17 @@
   <component name="ChangeListManager">
     <list default="true" id="4e710cfb-38b1-44e9-a4d9-901b431aea3b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.FireBros.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FireBros.dir/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Blueprints/FireFighter/BP_FireFighter.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/FireFighter/BP_FireFighter.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Test/BP_BreakTest.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Test/BP_BreakTest.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/FireBros/BreakableObject.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FireBros/BreakableObject.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Test/AxeToolBP.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Test/AxeToolBP.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Test/LargePickupTest.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Test/LargePickupTest.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Developers/gustavjohansson/Gustav_work.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Developers/gustavjohansson/Gustav_work.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/FireBros/AxeTool.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FireBros/AxeTool.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/FireBros/AxeTool.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FireBros/AxeTool.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/FireBros/FireFighter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FireBros/FireFighter.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/FireBros/FireFighter.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FireBros/FireFighter.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/FireBros/PickUpActor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FireBros/PickUpActor.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/FireBros/PickUpActor.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FireBros/PickUpActor.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/FireBros/Tool.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FireBros/Tool.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/FireBros/Tool.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FireBros/Tool.h" afterDir="false" />
     </list>
@@ -114,6 +120,19 @@
     <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$USER_HOME$/Downloads/Zelda2/Assets/LODAsync.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2
@@ -272,6 +291,13 @@
       <workItem from="1733823289541" duration="4354000" />
       <workItem from="1734704268045" duration="4216000" />
       <workItem from="1737105301565" duration="6895000" />
+      <workItem from="1737113780003" duration="6039000" />
+      <workItem from="1737382226821" duration="4514000" />
+      <workItem from="1737452281092" duration="10084000" />
+      <workItem from="1737559292446" duration="1716000" />
+      <workItem from="1737634543672" duration="8906000" />
+      <workItem from="1737720830936" duration="10854000" />
+      <workItem from="1737989610248" duration="2843000" />
     </task>
     <servers />
   </component>

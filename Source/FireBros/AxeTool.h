@@ -15,8 +15,9 @@ class FIREBROS_API AAxeTool : public ATool
 {
 	GENERATED_BODY()
 	AAxeTool();
-	
-	UBoxComponent* AxeHitBox = nullptr;
+
+public:
+	UPROPERTY(BlueprintReadWrite)UBoxComponent* AxeHitBox = nullptr;
 
 	virtual void UseToolToServer_Implementation() override;
 };

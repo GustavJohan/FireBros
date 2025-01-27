@@ -12,7 +12,10 @@
 #include "Tool.h"
 #include "Net/UnrealNetwork.h"
 #include "Engine/Light.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/GameSession.h"
+#include "GenericPlatform/GenericPlatformCrashContext.h"
+#include "Kismet/KismetMathLibrary.h"
 
 AFireFighter::AFireFighter()
 {
@@ -51,8 +54,8 @@ void AFireFighter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	if (_move){Input->BindAction(_move, ETriggerEvent::Triggered, this, &AFireFighter::MoveAction);}
 	if (_look){Input->BindAction(_look, ETriggerEvent::Triggered, this, &AFireFighter::LookAction);}
 	if (_jump){Input->BindAction(_jump, ETriggerEvent::Triggered, this, &AFireFighter::JumpAction);}
-	if (_pickUp){Input->BindAction(_pickUp, ETriggerEvent::Triggered, this, &AFireFighter::PickupAction);}
-	if (_hitObj){Input->BindAction(_hitObj, ETriggerEvent::Started, this, &AFireFighter::HitObjAction);}
+	if (_pickUp){Input->BindAction(_pickUp, ETriggerEvent::Started, this, &AFireFighter::PickupAction);}
+	if (_hitObj){Input->BindAction(_hitObj, ETriggerEvent::Started, this, &AFireFighter::UseToolAction);}
 }
 
 void AFireFighter::BeginPlay()
@@ -64,6 +67,11 @@ void AFireFighter::BeginPlay()
 		{
 			Subsystem->AddMappingContext(_defaultInputMapping.LoadSynchronous(), 0);
 		}
+	}
+
+	for (int i = 0; i < 60; ++i)
+	{
+		CameraMovementLog.Add(FRotator::ZeroRotator);
 	}
 	
 	SpawnRagdollRPCToServer();
@@ -104,21 +112,28 @@ void AFireFighter::Tick(float DeltaSeconds)
 			_CameraArmComponent->SetWorldLocation(ragdollActor->GetActorLocation() + FVector::UpVector*50);
 		}
 	}
-
-	if (pickedUpItem)
-	{
-		if (pickedUpItem->IsA<ATool>())
-		{
-			
-		}
-		else
-		{
-			pickedUpItem->SetActorLocation(_PickedUpObjAnchor->GetComponentLocation());
-			pickedUpItem->SetActorRotation(_PickedUpObjAnchor->GetComponentRotation());
-		}
-	}
 }
 
+void AFireFighter::AsyncPhysicsTickActor(float DeltaTime, float SimTime)
+{
+	Super::AsyncPhysicsTickActor(DeltaTime, SimTime);
+
+	
+	
+	if (!GetController()){return;}
+
+	if (!pickedUpItem){return;}
+	
+	//FVector2f currentCameraRotation = FVector2f(GetController()->GetDesiredRotation().Yaw, GetController()->GetDesiredRotation().Pitch);
+
+	//GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow, (currentCameraRotation-PrevCameraRot).ToString());
+	
+	CameraMovementLog[cameraMovementLogCurrent] = GetController()->GetDesiredRotation();//currentCameraRotation-PrevCameraRot;
+
+	cameraMovementLogCurrent = cameraMovementLogCurrent++ % 60;
+
+	//PrevCameraRot = FVector2f(GetController()->GetDesiredRotation().Yaw, GetController()->GetDesiredRotation().Pitch);
+}
 
 void AFireFighter::MoveAction(const FInputActionValue& Value)
 {
@@ -190,9 +205,59 @@ void AFireFighter::pickupToServer_Implementation()
 
 void AFireFighter::pickupMulticast_Implementation()
 {
-	GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow, "pickup");
-    
-	if (pickedUpItem){return;}
+	if (pickedUpItem)
+	{
+		if (pickedUpItem->IsA<ATool>())
+		{
+			Cast<ATool>(pickedUpItem)->DiscardToolMulticast();
+			DiscardTool(pickedUpItem);
+			pickedUpItem = nullptr;
+		}
+		else
+		{
+			pickedUpItem = Cast<APickUpActor>(pickedUpItem);
+			DiscardObject(pickedUpItem);
+			//pickedUpItem->SetActorEnableCollision(true);
+			GetCharacterMovement()->bUseControllerDesiredRotation = false;
+			GetCharacterMovement()->bOrientRotationToMovement = true;
+			pickedUpItem->discardActor();
+			
+			/*
+			FVector2f cameraDelta;
+                                   	
+			for (FVector2f cameraMove : CameraMovementLog)
+			{
+				cameraDelta += cameraMove;
+			}
+			*/
+
+			if (!GetController()){return;}
+			FRotator rotDelta = UKismetMathLibrary::NormalizedDeltaRotator(
+				GetController()->GetDesiredRotation(), CameraMovementLog[(cameraMovementLogCurrent+1)%60]);
+
+			//rotDelta *= UKismetMathLibrary::Vector4_DotProduct(GetController()->GetDesiredRotation().Euler(), CameraMovementLog[(cameraMovementLogCurrent+1)%60].Euler());
+
+			
+			FVector throwDirection = GetActorRightVector() * rotDelta.Yaw + GetActorUpVector() * rotDelta.Pitch;
+			//FVector throwDirection = GetActorRightVector() * cameraDelta.X + GetActorUpVector() * cameraDelta.Y;
+			
+			
+			GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow, "camera delta is: " + rotDelta.ToString());
+			//GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow, FString::SanitizeFloat(UKismetMathLibrary::Vector4_DotProduct(
+			//	GetController()->GetDesiredRotation().Euler(), CameraMovementLog[(cameraMovementLogCurrent+1)%60].Euler())));
+
+			float mouseMoveModifier = 1 - UKismetMathLibrary::Dot_VectorVector(
+				CameraMovementLog[(cameraMovementLogCurrent+1)%60].Quaternion().GetForwardVector(),
+				GetController()->GetDesiredRotation().Quaternion().GetForwardVector());
+			
+			throwDirection *= mouseMoveModifier;
+			GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow,FString::SanitizeFloat(mouseMoveModifier));
+			
+			pickedUpItem->throwActor(throwDirection*throwStrength);
+			pickedUpItem = nullptr;
+		}
+		return;
+	}
     
 	TArray<AActor*> actorsInBounds;
 	_PickUpObjHitBox->GetOverlappingActors(actorsInBounds);
@@ -207,12 +272,17 @@ void AFireFighter::pickupMulticast_Implementation()
 				{
 					pickedUpItem = Cast<APickUpActor>(pickedUp);
 					PickUpTool(pickedUp);
+					Cast<ATool>(pickedUpItem)->PickupToolMulticast();
 				}
 				else
 				{
 					pickedUpItem = Cast<APickUpActor>(pickedUp);
 					PickUpObject(pickedUp);
-					pickedUpItem->SetActorEnableCollision(false);
+					pickedUpItem->pickupActor();
+					//pickedUpItem->SetActorEnableCollision(false);
+					GetCharacterMovement()->bUseControllerDesiredRotation = true;
+					GetCharacterMovement()->bOrientRotationToMovement = false;
+					
 				}
 			}
 		}
@@ -221,26 +291,21 @@ void AFireFighter::pickupMulticast_Implementation()
 
 
 
-void AFireFighter::HitObjAction(const FInputActionValue& Value)
+void AFireFighter::UseToolAction(const FInputActionValue& Value)
 {
 	
 
 	if (!pickedUpItem){return;}
+	if (!pickedUpItem->IsA<ATool>()){return;}
+
 	GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow, "Tool Used");
 
-	BreakObjectRPCToServerFromFireFighter(nullptr);
-	
+	UseToolRPCToServerFromFireFighter();
 }
 
-void AFireFighter::BreakObjectRPCToServerFromFireFighter_Implementation(ABreakableObject* objectToBreak)
+void AFireFighter::UseToolRPCToServerFromFireFighter_Implementation()
 {
 	Cast<ATool>(pickedUpItem)->UseToolToServer();
-	/*FVector direction = objectToBreak->GetActorLocation() - GetActorLocation();
-	direction.Normalize();
-	direction += FVector::UpVector;
-	direction.Normalize();
-
-	objectToBreak->BreakObjectMulticast(direction);*/
 }
 
 void AFireFighter::SetCameraPositionOnClient_Implementation(FVector pos)

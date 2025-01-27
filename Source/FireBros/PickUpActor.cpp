@@ -15,7 +15,8 @@ APickUpActor::APickUpActor()
 void APickUpActor::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	ObjectMesh = GetComponentByClass<UStaticMeshComponent>();
 }
 
 // Called every frame
@@ -23,5 +24,30 @@ void APickUpActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (pickedUp)
+	{
+		ObjectMesh->SetWorldLocation(RootComponent->GetComponentToWorld().GetLocation(), true);
+		ObjectMesh->SetWorldRotation(RootComponent->GetComponentToWorld().Rotator());
+	}
 }
 
+void APickUpActor::pickupActor()
+{
+	pickedUp = true;
+	ObjectMesh->SetCollisionProfileName("IgnoreOnlyPawn");
+	ObjectMesh->SetEnableGravity(false);
+}
+
+void APickUpActor::discardActor()
+{
+	pickedUp = false;
+	ObjectMesh->SetCollisionProfileName("PhysicsActor");
+	ObjectMesh->SetEnableGravity(true);
+}
+
+void APickUpActor::throwActor(FVector impulseDirection)
+{
+	GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow, "adding impulse: " + impulseDirection.ToString());
+			
+	ObjectMesh->AddImpulse(impulseDirection);
+}

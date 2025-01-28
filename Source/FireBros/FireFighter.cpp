@@ -72,6 +72,7 @@ void AFireFighter::BeginPlay()
 	for (int i = 0; i < 60; ++i)
 	{
 		CameraMovementLog.Add(FRotator::ZeroRotator);
+		mouseMovementLog.Add(FVector2d::Zero());
 	}
 	
 	SpawnRagdollRPCToServer();
@@ -129,8 +130,11 @@ void AFireFighter::AsyncPhysicsTickActor(float DeltaTime, float SimTime)
 	//GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow, (currentCameraRotation-PrevCameraRot).ToString());
 	
 	CameraMovementLog[cameraMovementLogCurrent] = GetController()->GetDesiredRotation();//currentCameraRotation-PrevCameraRot;
+	mouseMovementLog[cameraMovementLogCurrent] = mouseMoveThisTick;
+	mouseMoveThisTick = FVector2d::Zero();
 
 	cameraMovementLogCurrent = cameraMovementLogCurrent++ % 60;
+
 
 	//PrevCameraRot = FVector2f(GetController()->GetDesiredRotation().Yaw, GetController()->GetDesiredRotation().Pitch);
 }
@@ -158,9 +162,9 @@ void AFireFighter::LookAction(const FInputActionValue& Value)
 {
 	FVector2d inputVector = -Value.Get<FVector2d>();
 
-	//GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow, inputVector.ToString());
+	mouseMoveThisTick += inputVector;
 	
-	AddControllerPitchInput(inputVector.Y);
+	AddControllerPitchInput(-inputVector.Y);
 	AddControllerYawInput  (-inputVector.X);
 }
 
@@ -222,36 +226,55 @@ void AFireFighter::pickupMulticast_Implementation()
 			GetCharacterMovement()->bOrientRotationToMovement = true;
 			pickedUpItem->discardActor();
 			
-			/*
-			FVector2f cameraDelta;
-                                   	
-			for (FVector2f cameraMove : CameraMovementLog)
-			{
-				cameraDelta += cameraMove;
-			}
-			*/
+			
 
 			if (!GetController()){return;}
 			FRotator rotDelta = UKismetMathLibrary::NormalizedDeltaRotator(
 				GetController()->GetDesiredRotation(), CameraMovementLog[(cameraMovementLogCurrent+1)%60]);
+			
+			FRotator bestRot = FRotator::ZeroRotator;
+			float bestDotProd = 1;
+			/*
+			for (FRotator rotations : CameraMovementLog)
+			{
+				float currentDotProd = UKismetMathLibrary::Abs(UKismetMathLibrary::Dot_VectorVector(
+				rotations.Quaternion().GetForwardVector(),
+				GetController()->GetDesiredRotation().Quaternion().GetForwardVector()));
 
+				if (bestDotProd > currentDotProd)
+				{
+					GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow, FString::SanitizeFloat(currentDotProd) + " is the new best");
+					bestDotProd = currentDotProd;
+					bestRot = rotations;
+				}
+			}
+			*/
+			
+			FVector2d cameraDelta;
+                                   	
+			for (FVector2d cameraMove : mouseMovementLog)
+			{
+				cameraDelta += cameraMove;
+			}
+			
 			//rotDelta *= UKismetMathLibrary::Vector4_DotProduct(GetController()->GetDesiredRotation().Euler(), CameraMovementLog[(cameraMovementLogCurrent+1)%60].Euler());
 
 			
-			FVector throwDirection = GetActorRightVector() * rotDelta.Yaw + GetActorUpVector() * rotDelta.Pitch;
-			//FVector throwDirection = GetActorRightVector() * cameraDelta.X + GetActorUpVector() * cameraDelta.Y;
+			//FVector throwDirection = GetActorRightVector() * rotDelta.Yaw + GetActorUpVector() * rotDelta.Pitch;
+			FVector throwDirection = GetActorRightVector() * -cameraDelta.X + GetActorUpVector() * cameraDelta.Y;
+
 			
 			
 			GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow, "camera delta is: " + rotDelta.ToString());
 			//GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow, FString::SanitizeFloat(UKismetMathLibrary::Vector4_DotProduct(
 			//	GetController()->GetDesiredRotation().Euler(), CameraMovementLog[(cameraMovementLogCurrent+1)%60].Euler())));
 
-			float mouseMoveModifier = 1 - UKismetMathLibrary::Dot_VectorVector(
-				CameraMovementLog[(cameraMovementLogCurrent+1)%60].Quaternion().GetForwardVector(),
-				GetController()->GetDesiredRotation().Quaternion().GetForwardVector());
+			//float mouseMoveModifier = 1 - UKismetMathLibrary::Abs(UKismetMathLibrary::Dot_VectorVector(
+			//	CameraMovementLog[(cameraMovementLogCurrent+1)%60].Quaternion().GetForwardVector(),
+			//	GetController()->GetDesiredRotation().Quaternion().GetForwardVector()));
 			
-			throwDirection *= mouseMoveModifier;
-			GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow,FString::SanitizeFloat(mouseMoveModifier));
+			//throwDirection *= mouseMoveModifier;
+			//GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow,FString::SanitizeFloat(mouseMoveModifier));
 			
 			pickedUpItem->throwActor(throwDirection*throwStrength);
 			pickedUpItem = nullptr;

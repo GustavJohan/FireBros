@@ -82,6 +82,8 @@ private:
 	
 	FVector2f PrevCameraRot;
 	TArray<FRotator, TFixedAllocator<60>> CameraMovementLog;
+	TArray<FVector2d, TFixedAllocator<60>> mouseMovementLog;
+	FVector2d mouseMoveThisTick = FVector2d::Zero();
 	int cameraMovementLogCurrent = 0;
 	
 

@@ -11,6 +11,9 @@
   <component name="ChangeListManager">
     <list default="true" id="4e710cfb-38b1-44e9-a4d9-901b431aea3b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.FireBros.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FireBros.dir/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/FireFighter/BP_FireFighter.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/FireFighter/BP_FireFighter.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Input/InputAction/IA_PickUp.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Input/InputAction/IA_PickUp.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Input/InputMap.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Input/InputMap.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/FireBros/FireFighter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FireBros/FireFighter.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/FireBros/FireFighter.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FireBros/FireFighter.h" afterDir="false" />
     </list>
@@ -194,6 +197,9 @@
       <workItem from="1737720830936" duration="10854000" />
       <workItem from="1737989610248" duration="2843000" />
       <workItem from="1738057958821" duration="4631000" />
+      <workItem from="1738066057078" duration="2412000" />
+      <workItem from="1738231909778" duration="1448000" />
+      <workItem from="1738234076331" duration="1367000" />
     </task>
     <servers />
   </component>

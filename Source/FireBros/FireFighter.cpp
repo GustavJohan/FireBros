@@ -55,6 +55,7 @@ void AFireFighter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	if (_look){Input->BindAction(_look, ETriggerEvent::Triggered, this, &AFireFighter::LookAction);}
 	if (_jump){Input->BindAction(_jump, ETriggerEvent::Triggered, this, &AFireFighter::JumpAction);}
 	if (_pickUp){Input->BindAction(_pickUp, ETriggerEvent::Started, this, &AFireFighter::PickupAction);}
+	if (_pickUp){Input->BindAction(_pickUp, ETriggerEvent::Completed, this, &AFireFighter::DiscardAction);}
 	if (_hitObj){Input->BindAction(_hitObj, ETriggerEvent::Started, this, &AFireFighter::UseToolAction);}
 }
 
@@ -160,12 +161,12 @@ void AFireFighter::MoveAction(const FInputActionValue& Value)
 
 void AFireFighter::LookAction(const FInputActionValue& Value)
 {
-	FVector2d inputVector = -Value.Get<FVector2d>();
+	FVector2d inputVector = Value.Get<FVector2d>();
 
 	mouseMoveThisTick += inputVector;
 	
-	AddControllerPitchInput(-inputVector.Y);
-	AddControllerYawInput  (-inputVector.X);
+	AddControllerPitchInput(inputVector.Y*invertCameraVertical);
+	AddControllerYawInput(inputVector.X*invertCameraHorizontal);
 }
 
 void AFireFighter::JumpAction(const FInputActionValue& Value)
@@ -209,79 +210,6 @@ void AFireFighter::pickupToServer_Implementation()
 
 void AFireFighter::pickupMulticast_Implementation()
 {
-	if (pickedUpItem)
-	{
-		if (pickedUpItem->IsA<ATool>())
-		{
-			Cast<ATool>(pickedUpItem)->DiscardToolMulticast();
-			DiscardTool(pickedUpItem);
-			pickedUpItem = nullptr;
-		}
-		else
-		{
-			pickedUpItem = Cast<APickUpActor>(pickedUpItem);
-			DiscardObject(pickedUpItem);
-			//pickedUpItem->SetActorEnableCollision(true);
-			GetCharacterMovement()->bUseControllerDesiredRotation = false;
-			GetCharacterMovement()->bOrientRotationToMovement = true;
-			pickedUpItem->discardActor();
-			
-			
-
-			if (!GetController()){return;}
-			FRotator rotDelta = UKismetMathLibrary::NormalizedDeltaRotator(
-				GetController()->GetDesiredRotation(), CameraMovementLog[(cameraMovementLogCurrent+1)%60]);
-			
-			FRotator bestRot = FRotator::ZeroRotator;
-			float bestDotProd = 1;
-			/*
-			for (FRotator rotations : CameraMovementLog)
-			{
-				float currentDotProd = UKismetMathLibrary::Abs(UKismetMathLibrary::Dot_VectorVector(
-				rotations.Quaternion().GetForwardVector(),
-				GetController()->GetDesiredRotation().Quaternion().GetForwardVector()));
-
-				if (bestDotProd > currentDotProd)
-				{
-					GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow, FString::SanitizeFloat(currentDotProd) + " is the new best");
-					bestDotProd = currentDotProd;
-					bestRot = rotations;
-				}
-			}
-			*/
-			
-			FVector2d cameraDelta;
-                                   	
-			for (FVector2d cameraMove : mouseMovementLog)
-			{
-				cameraDelta += cameraMove;
-			}
-			
-			//rotDelta *= UKismetMathLibrary::Vector4_DotProduct(GetController()->GetDesiredRotation().Euler(), CameraMovementLog[(cameraMovementLogCurrent+1)%60].Euler());
-
-			
-			//FVector throwDirection = GetActorRightVector() * rotDelta.Yaw + GetActorUpVector() * rotDelta.Pitch;
-			FVector throwDirection = GetActorRightVector() * -cameraDelta.X + GetActorUpVector() * cameraDelta.Y;
-
-			
-			
-			GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow, "camera delta is: " + rotDelta.ToString());
-			//GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow, FString::SanitizeFloat(UKismetMathLibrary::Vector4_DotProduct(
-			//	GetController()->GetDesiredRotation().Euler(), CameraMovementLog[(cameraMovementLogCurrent+1)%60].Euler())));
-
-			//float mouseMoveModifier = 1 - UKismetMathLibrary::Abs(UKismetMathLibrary::Dot_VectorVector(
-			//	CameraMovementLog[(cameraMovementLogCurrent+1)%60].Quaternion().GetForwardVector(),
-			//	GetController()->GetDesiredRotation().Quaternion().GetForwardVector()));
-			
-			//throwDirection *= mouseMoveModifier;
-			//GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow,FString::SanitizeFloat(mouseMoveModifier));
-			
-			pickedUpItem->throwActor(throwDirection*throwStrength);
-			pickedUpItem = nullptr;
-		}
-		return;
-	}
-    
 	TArray<AActor*> actorsInBounds;
 	_PickUpObjHitBox->GetOverlappingActors(actorsInBounds);
     	
@@ -302,7 +230,6 @@ void AFireFighter::pickupMulticast_Implementation()
 					pickedUpItem = Cast<APickUpActor>(pickedUp);
 					PickUpObject(pickedUp);
 					pickedUpItem->pickupActor();
-					//pickedUpItem->SetActorEnableCollision(false);
 					GetCharacterMovement()->bUseControllerDesiredRotation = true;
 					GetCharacterMovement()->bOrientRotationToMovement = false;
 					
@@ -312,7 +239,56 @@ void AFireFighter::pickupMulticast_Implementation()
 	}
 }
 
+void AFireFighter::DiscardAction(const FInputActionValue& Value)
+{
+	discardToServer_Implementation();
+}
 
+void AFireFighter::discardToServer_Implementation()
+{
+	discardMulticast_Implementation();
+}
+
+void AFireFighter::discardMulticast_Implementation()
+{
+	if (pickedUpItem)
+	{
+		if (pickedUpItem->IsA<ATool>())
+		{
+			Cast<ATool>(pickedUpItem)->DiscardToolMulticast();
+			DiscardTool(pickedUpItem);
+			pickedUpItem = nullptr;
+		}
+		else
+		{
+			pickedUpItem = Cast<APickUpActor>(pickedUpItem);
+			DiscardObject(pickedUpItem);
+			GetCharacterMovement()->bUseControllerDesiredRotation = false;
+			GetCharacterMovement()->bOrientRotationToMovement = true;
+			pickedUpItem->discardActor();
+			
+			
+
+			if (!GetController()){return;}
+			
+			FVector2d cameraDelta;
+                                   	
+			for (FVector2d cameraMove : mouseMovementLog)
+			{
+				cameraDelta += cameraMove;
+			}
+			
+			FVector throwDirection = GetActorRightVector() * cameraDelta.X + GetActorUpVector() * cameraDelta.Y;
+
+			
+			
+			GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow, "camera delta is: " + throwDirection.ToString());
+			
+			pickedUpItem->throwActor(throwDirection*throwStrength);
+			pickedUpItem = nullptr;
+		}
+	}
+}
 
 void AFireFighter::UseToolAction(const FInputActionValue& Value)
 {

@@ -27,6 +27,10 @@ public:
 
 	UPROPERTY(EditAnywhere, Category=Input) TSoftObjectPtr<UInputMappingContext> _defaultInputMapping;
 
+	
+	UPROPERTY(EditAnywhere, Category=Input) int invertCameraVertical = 1;
+	UPROPERTY(EditAnywhere, Category=Input) int invertCameraHorizontal = 1;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) USpringArmComponent*		    _CameraArmComponent = nullptr;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) USceneComponent*				_RagdollMeshAnchor  = nullptr;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) USceneComponent*				_PickedUpObjAnchor  = nullptr;
@@ -75,10 +79,13 @@ private:
 
 
 	void PickupAction     (const FInputActionValue& Value);
+	void DiscardAction     (const FInputActionValue& Value);
 	
 	UFUNCTION(Server, Reliable) void pickupToServer();
 	UFUNCTION(NetMulticast, Reliable) void pickupMulticast();
 
+	UFUNCTION(Server, Reliable) void discardToServer();
+	UFUNCTION(NetMulticast, Reliable) void discardMulticast();
 	
 	FVector2f PrevCameraRot;
 	TArray<FRotator, TFixedAllocator<60>> CameraMovementLog;

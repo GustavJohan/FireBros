@@ -3,6 +3,8 @@
 
 #include "FireFighterRagdoll.h"
 
+#include "GameFramework/Character.h"
+
 // Sets default values
 AFireFighterRagdoll::AFireFighterRagdoll()
 {
@@ -60,6 +62,10 @@ void AFireFighterRagdoll::BeginCharacterRagdoll_Implementation()
 	if (HasAuthority())
 	{
 		_RagdollMesh->SetSimulatePhysics(true);
+		if (_owningCharacter)
+		{
+			_RagdollMesh->SetPhysicsLinearVelocity(_owningCharacter->GetVelocity());
+		}
 	}
 	
 	_RagdollMesh->SetVisibility(true);
@@ -77,4 +83,9 @@ void AFireFighterRagdoll::EndCharacterRagdoll_Implementation()
 		_RagdollMesh->SetSimulatePhysics(false);
 	}
 	_RagdollMesh->SetVisibility(false);
+}
+
+void AFireFighterRagdoll::AddRagdollImpulse(FVector Impulse)
+{
+	_RagdollMesh->AddImpulse(Impulse);
 }

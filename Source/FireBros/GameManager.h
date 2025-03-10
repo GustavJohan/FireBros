@@ -4,16 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "PickUpActor.generated.h"
+#include "GameManager.generated.h"
+
+class AEvacPoint;
 
 UCLASS()
-class FIREBROS_API APickUpActor : public AActor
+class FIREBROS_API AGameManager : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	APickUpActor();
+	AGameManager();
 
 protected:
 	// Called when the game starts or when spawned
@@ -23,12 +25,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(BlueprintReadOnly) bool pickedUp = false;
+	TArray<AEvacPoint*> EvacPoints;
 
-	UFUNCTION() void pickupActor();
-	UFUNCTION(Server, Reliable) void discardActor();
-
-	UStaticMeshComponent* ObjectMesh = nullptr;
-
-	UFUNCTION(Server, Reliable) void throwActor(FVector impulseDirection);
+	AEvacPoint* getClosestEvac(FVector position);
 };

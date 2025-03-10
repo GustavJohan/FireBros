@@ -17,15 +17,21 @@ void APickUpActor::BeginPlay()
 	Super::BeginPlay();
 
 	ObjectMesh = GetComponentByClass<UStaticMeshComponent>();
+
+	if (HasAuthority())
+	{
+		ObjectMesh->SetSimulatePhysics(true);
+	}
 }
 
 // Called every frame
 void APickUpActor::Tick(float DeltaTime)
 {
+	if (pickedUp && HasAuthority())
+ 	{
 	Super::Tick(DeltaTime);
 
-	if (pickedUp)
-	{
+	
 		ObjectMesh->SetWorldLocation(RootComponent->GetComponentToWorld().GetLocation(), true);
 		ObjectMesh->SetWorldRotation(RootComponent->GetComponentToWorld().Rotator());
 	}
@@ -33,21 +39,32 @@ void APickUpActor::Tick(float DeltaTime)
 
 void APickUpActor::pickupActor()
 {
+	if (HasAuthority())
+ 	{
 	pickedUp = true;
-	ObjectMesh->SetCollisionProfileName("IgnoreOnlyPawn");
-	ObjectMesh->SetEnableGravity(false);
+	
+		ObjectMesh->SetCollisionProfileName("IgnoreOnlyPawn");
+		ObjectMesh->SetEnableGravity(false);
+	}
 }
 
-void APickUpActor::discardActor()
+void APickUpActor::discardActor_Implementation()
 {
+	if (true)
+ 	{
 	pickedUp = false;
-	ObjectMesh->SetCollisionProfileName("PhysicsActor");
-	ObjectMesh->SetEnableGravity(true);
+	
+	
+		ObjectMesh->SetEnableGravity(true);
+		ObjectMesh->SetCollisionProfileName("PhysicsActor");
+	}
 }
 
-void APickUpActor::throwActor(FVector impulseDirection)
+void APickUpActor::throwActor_Implementation(FVector impulseDirection)
 {
 	GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow, "adding impulse: " + impulseDirection.ToString());
-			
-	ObjectMesh->AddImpulse(impulseDirection);
+	if (true)
+	{
+		ObjectMesh->AddImpulse(impulseDirection);
+	}
 }

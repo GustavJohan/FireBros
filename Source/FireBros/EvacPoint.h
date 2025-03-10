@@ -4,16 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "PickUpActor.generated.h"
+#include "EvacPoint.generated.h"
+
+class UBoxComponent;
 
 UCLASS()
-class FIREBROS_API APickUpActor : public AActor
+class FIREBROS_API AEvacPoint : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	APickUpActor();
+	AEvacPoint();
 
 protected:
 	// Called when the game starts or when spawned
@@ -23,12 +25,5 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(BlueprintReadOnly) bool pickedUp = false;
-
-	UFUNCTION() void pickupActor();
-	UFUNCTION(Server, Reliable) void discardActor();
-
-	UStaticMeshComponent* ObjectMesh = nullptr;
-
-	UFUNCTION(Server, Reliable) void throwActor(FVector impulseDirection);
+	UPROPERTY(VisibleAnywhere)UBoxComponent* EvacPointBounds = nullptr;
 };

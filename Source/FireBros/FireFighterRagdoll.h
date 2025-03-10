@@ -34,4 +34,6 @@ public:
 	UFUNCTION(NetMulticast, Reliable)void EndCharacterRagdoll();
 
 	UFUNCTION(BlueprintImplementableEvent) void RagdollClient();
+
+	UFUNCTION() void AddRagdollImpulse(FVector Impulse);
 };

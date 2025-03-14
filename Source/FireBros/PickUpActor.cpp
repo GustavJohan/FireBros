@@ -3,6 +3,8 @@
 
 #include "PickUpActor.h"
 
+#include "Net/UnrealNetwork.h"
+
 // Sets default values
 APickUpActor::APickUpActor()
 {
@@ -10,6 +12,13 @@ APickUpActor::APickUpActor()
 	PrimaryActorTick.bCanEverTick = true;
 
 }
+
+void APickUpActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(APickUpActor, pickedUp);
+}
+
 
 // Called when the game starts or when spawned
 void APickUpActor::BeginPlay()
@@ -27,25 +36,32 @@ void APickUpActor::BeginPlay()
 // Called every frame
 void APickUpActor::Tick(float DeltaTime)
 {
+	Super::Tick(DeltaTime);
 	if (pickedUp && HasAuthority())
  	{
-	Super::Tick(DeltaTime);
-
-	
 		ObjectMesh->SetWorldLocation(RootComponent->GetComponentToWorld().GetLocation(), true);
 		ObjectMesh->SetWorldRotation(RootComponent->GetComponentToWorld().Rotator());
 	}
+
+	
+	
 }
 
-void APickUpActor::pickupActor()
+void APickUpActor::OnRep_PickedUp()
 {
-	if (HasAuthority())
- 	{
+	FString pickedUpString = pickedUp ? "true" : "false";
+ 	
+ 	GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow, pickedUpString);
+	ObjectMesh->SetEnableGravity(!pickedUp);
+}
+
+
+void APickUpActor::pickupActor_Implementation()
+{
 	pickedUp = true;
 	
-		ObjectMesh->SetCollisionProfileName("IgnoreOnlyPawn");
-		ObjectMesh->SetEnableGravity(false);
-	}
+	ObjectMesh->SetCollisionProfileName("IgnoreOnlyPawn");
+	OnRep_PickedUp();
 }
 
 void APickUpActor::discardActor_Implementation()
@@ -55,7 +71,8 @@ void APickUpActor::discardActor_Implementation()
 	pickedUp = false;
 	
 	
-		ObjectMesh->SetEnableGravity(true);
+		OnRep_PickedUp();
+		//ObjectMesh->SetEnableGravity(true);
 		ObjectMesh->SetCollisionProfileName("PhysicsActor");
 	}
 }

@@ -23,6 +23,8 @@ class FIREBROS_API ACivilianCharacter : public ARagdollCharacter
 
 	virtual void Tick(float DeltaSeconds) override;
 
+	virtual void endRagdoll() override;
+
 public:
 	void Evacuate();
 

@@ -20,22 +20,13 @@ void ACivilianCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	_AIController = Cast<AAIController>(GetController());
-
-	FTimerHandle Handle;
-
-
-	GetWorldTimerManager().SetTimer(Handle, FTimerDelegate::CreateLambda(
-		[this] {Evacuate();}), 2, false);
 }
 
 void ACivilianCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 	
-	if (ragdollActor)
-	{
-		ragdollActor->SetActorLocationAndRotation(GetMesh()->GetComponentLocation(), GetMesh()->GetComponentRotation());
-	}
+	
 	
 }
 
@@ -45,4 +36,11 @@ void ACivilianCharacter::Evacuate()
 	{
 		_AIController->MoveToActor(GameManager->getClosestEvac(GetActorLocation()));
 	}
+}
+
+
+void ACivilianCharacter::endRagdoll()
+{
+	Super::endRagdoll();
+	Evacuate();
 }

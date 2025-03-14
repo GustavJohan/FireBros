@@ -35,7 +35,6 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) USpringArmComponent*		    _CameraArmComponent = nullptr;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) USceneComponent*				_PickedUpObjAnchor  = nullptr;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) UBoxComponent*				_PickUpObjHitBox    = nullptr;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) UBoxComponent*				_HitObjBox		    = nullptr;
 
 	
 
@@ -78,13 +77,16 @@ private:
 	UFUNCTION(Server, Reliable) void discardToServer();
 	UFUNCTION(Server, Reliable) void ThrowFromFireFighterToServer(FVector throwDirection);
 	UFUNCTION(NetMulticast, Reliable) void discardMulticast();
+	UFUNCTION(NetMulticast, Reliable) void ResetHelditemRefMulticast();
 	
 	FVector2f PrevCameraRot;
 	TArray<FRotator, TFixedAllocator<60>> CameraMovementLog;
 	TArray<FVector2d, TFixedAllocator<60>> mouseMovementLog;
 	FVector2d mouseMoveThisTick = FVector2d::Zero();
 	int cameraMovementLogCurrent = 0;
-	
+
+	void beginRagdoll(float ragdollTime) override;
+	void RagdollPickup() override;
 
 protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

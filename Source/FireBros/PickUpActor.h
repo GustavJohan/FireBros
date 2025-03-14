@@ -23,9 +23,11 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(BlueprintReadOnly) bool pickedUp = false;
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_PickedUp) bool pickedUp = false;
+	
+	UFUNCTION() void OnRep_PickedUp();
 
-	UFUNCTION() void pickupActor();
+	UFUNCTION(Server, Reliable) void pickupActor();
 	UFUNCTION(Server, Reliable) void discardActor();
 
 	UStaticMeshComponent* ObjectMesh = nullptr;

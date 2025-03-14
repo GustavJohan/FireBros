@@ -25,4 +25,11 @@ public:
 	
 	UFUNCTION(Server	  , Reliable) virtual void DiscardToolToServer();
 	UFUNCTION(NetMulticast, Reliable) virtual void DiscardToolMulticast();
+
+	void BeginPlay() override;
+
+	UPROPERTY() float groundSnapHeightOffset = 10;
+	void SnapToGround();
+	
+	UFUNCTION()void DisablePhysicsSimulation(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
 };

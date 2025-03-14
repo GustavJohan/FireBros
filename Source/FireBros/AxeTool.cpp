@@ -10,6 +10,11 @@
 AAxeTool::AAxeTool()
 {
 	AxeHitBox = CreateDefaultSubobject<UBoxComponent>("hitBox");
+	AxeMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("Axe Mesh");
+
+	AxeHitBox->SetupAttachment(AxeMeshComponent);
+
+	//AxeMeshComponent->OnComponentHit.AddDynamic(this, &ATool::DisablePhysicsSimulation);
 }
 
 

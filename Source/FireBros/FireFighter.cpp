@@ -33,9 +33,6 @@ AFireFighter::AFireFighter()
 
 	_PickUpObjHitBox = CreateDefaultSubobject<UBoxComponent>("pickup Box");
 	_PickUpObjHitBox->SetupAttachment(RootComponent);
-
-	_HitObjBox = CreateDefaultSubobject<UBoxComponent>("hit Box");
-	_HitObjBox->SetupAttachment(RootComponent);
 }
 
 /*
@@ -97,7 +94,7 @@ void AFireFighter::Tick(float DeltaSeconds)
 	if (!_isRagDolling)
 	{
 		_CameraArmComponent->SetWorldLocation(GetActorLocation());
-		ragdollActor->SetActorTransform(_RagdollMeshAnchor->GetComponentTransform(), false, nullptr, ETeleportType::TeleportPhysics);
+		//ragdollActor->SetActorTransform(_RagdollMeshAnchor->GetComponentTransform(), false, nullptr, ETeleportType::TeleportPhysics);
 	}
 	else
 	{
@@ -182,6 +179,19 @@ void AFireFighter::pickupToServer_Implementation()
 
 void AFireFighter::pickupMulticast_Implementation()
 {
+	if (pickedUpItem)
+	{
+		if (pickedUpItem->IsA<ATool>())
+		{
+			Cast<ATool>(pickedUpItem)->DiscardToolMulticast();
+			DiscardTool(pickedUpItem);
+			pickedUpItem = nullptr;
+			return;
+		}
+
+		pickedUpItem = nullptr;
+	}
+	
 	TArray<AActor*> actorsInBounds;
 	_PickUpObjHitBox->GetOverlappingActors(actorsInBounds);
     	
@@ -196,6 +206,7 @@ void AFireFighter::pickupMulticast_Implementation()
 					pickedUpItem = pickedUp;
 					PickUpTool(pickedUp);
 					Cast<ATool>(pickedUpItem)->PickupToolMulticast();
+					return;
 				}
 				else
 				{
@@ -204,6 +215,7 @@ void AFireFighter::pickupMulticast_Implementation()
 					Cast<APickUpActor>(pickedUp)->pickupActor();
 					GetCharacterMovement()->bUseControllerDesiredRotation = true;
 					GetCharacterMovement()->bOrientRotationToMovement = false;
+					return;
 					
 				}
 			}
@@ -216,6 +228,7 @@ void AFireFighter::pickupMulticast_Implementation()
 			Cast<ARagdollCharacter>(pickedUp)->RagdollPickup();
 			GetCharacterMovement()->bUseControllerDesiredRotation = true;
 			GetCharacterMovement()->bOrientRotationToMovement = false;
+			return;
 		}
 	}
 }
@@ -234,49 +247,46 @@ void AFireFighter::discardMulticast_Implementation()
 {
 	if (pickedUpItem)
 	{
-		if (pickedUpItem->IsA<ATool>())
+		if (pickedUpItem->IsA<ATool>()) {return;}
+
+		
+		GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow, "Discarding");
+		DiscardObject(pickedUpItem);
+		GetCharacterMovement()->bUseControllerDesiredRotation = false;
+		GetCharacterMovement()->bOrientRotationToMovement = true;
+		if (pickedUpItem->IsA<APickUpActor>())
 		{
-			Cast<ATool>(pickedUpItem)->DiscardToolMulticast();
-			DiscardTool(pickedUpItem);
-			pickedUpItem = nullptr;
+			Cast<APickUpActor>(pickedUpItem)->discardActor();
 		}
-		else
-		{
-			GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow, "Discarding");
-			DiscardObject(pickedUpItem);
-			GetCharacterMovement()->bUseControllerDesiredRotation = false;
-			GetCharacterMovement()->bOrientRotationToMovement = true;
-			if (pickedUpItem->IsA<APickUpActor>())
-			{
-				Cast<APickUpActor>(pickedUpItem)->discardActor();
-			}
 			
 			
 
 			
 			
-			FVector2d cameraDelta;
+		FVector2d cameraDelta;
                                    	
-			for (FVector2d cameraMove : mouseMovementLog)
-			{
-				cameraDelta += cameraMove;
-			}
-			
-			FVector throwDirection = GetActorRightVector() * cameraDelta.X + GetActorUpVector() * cameraDelta.Y;
-
-			if (!GetController()){return;}
-
-			ThrowFromFireFighterToServer(throwDirection);
-			
-			
-			//GetWorldTimerManager().SetTimerForNextTick(FTimerDelegate::CreateLambda([this] {pickedUpItem = nullptr;}));
+		for (FVector2d cameraMove : mouseMovementLog)
+		{
+			cameraDelta += cameraMove;
 		}
+			
+		FVector throwDirection = GetActorRightVector() * cameraDelta.X + GetActorUpVector() * cameraDelta.Y;
+
+		if (!GetController()){return;}
+
+		ThrowFromFireFighterToServer(throwDirection);
+
+		
 	}
 }
 
 void AFireFighter::ThrowFromFireFighterToServer_Implementation(FVector throwDirection)
 {
-	//GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow, "throwing" + pickedUpItem->GetName());
+	//Idiot proofing
+	if (!pickedUpItem)
+	{
+		return;
+	}
     			
 	if (pickedUpItem->IsA<APickUpActor>())
 	{
@@ -286,11 +296,17 @@ void AFireFighter::ThrowFromFireFighterToServer_Implementation(FVector throwDire
 	{
 		Cast<ARagdollCharacter>(pickedUpItem)->RagdollThrowToServer(throwDirection*throwStrength);
 	}
-    			
-    			
+                                                               			
+                                                               			
 	GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow, "camera delta is: " + throwDirection.ToString());
 
 	//pickedUpItem = nullptr;
+	//ResetHelditemRefMulticast();
+}
+
+void AFireFighter::ResetHelditemRefMulticast_Implementation()
+{
+	pickedUpItem = nullptr;
 }
 
 
@@ -313,6 +329,18 @@ void AFireFighter::UseToolRPCToServerFromFireFighter_Implementation()
 
 void AFireFighter::SetCameraPositionOnClient_Implementation(FVector pos)
 {
-	_CameraArmComponent->SetWorldLocation(pos + FVector::UpVector*50);
-	//GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow, "Ragdolling");
 }
+
+
+void AFireFighter::RagdollPickup()
+{
+	discardToServer();
+	Super::RagdollPickup();
+}
+
+void AFireFighter::beginRagdoll(float ragdollTime)
+{
+	discardToServer();
+	Super::beginRagdoll(ragdollTime);
+}
+

@@ -31,8 +31,8 @@ public:
 	UFUNCTION(Server, Reliable) void SpawnRagdollRPCToServer();
 
 	
-	UFUNCTION(BlueprintCallable, NetMulticast, Reliable) void beginRagdoll(float ragdollTime = 5);
-	UFUNCTION(BlueprintCallable, NetMulticast, Reliable) void endRagdoll();
+	UFUNCTION(BlueprintCallable, NetMulticast, Reliable) virtual void beginRagdoll(float ragdollTime = 5);
+	UFUNCTION(BlueprintCallable, NetMulticast, Reliable) virtual void endRagdoll();
 
 	
 	FTimerHandle resetRagdoll;
@@ -43,7 +43,7 @@ public:
 	
 	bool _isRagDolling = false;
 
-	UFUNCTION() void RagdollPickup();
+	UFUNCTION() virtual void RagdollPickup();
 	UFUNCTION(BlueprintImplementableEvent) void RagdollPickupEvent();
 	UFUNCTION(NetMulticast, Reliable) void RagdollThrowMultiCast(FVector force);
 	UFUNCTION(Server, Reliable) void RagdollThrowToServer(FVector force);

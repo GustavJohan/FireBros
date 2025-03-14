@@ -25,7 +25,11 @@ void ARagdollCharacter::BeginPlay()
 void ARagdollCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
+	if (ragdollActor && !_isRagDolling)
+	{
+		ragdollActor->SetActorLocationAndRotation(GetMesh()->GetComponentLocation(), GetMesh()->GetComponentRotation());
+	}
 }
 
 // Called to bind functionality to input

@@ -17,7 +17,8 @@ class FIREBROS_API AAxeTool : public ATool
 	AAxeTool();
 
 public:
-	UPROPERTY(BlueprintReadWrite)UBoxComponent* AxeHitBox = nullptr;
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)UBoxComponent* AxeHitBox = nullptr;
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)UStaticMeshComponent* AxeMeshComponent = nullptr;
 
 	virtual void UseToolToServer_Implementation() override;
 };

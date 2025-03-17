@@ -24,6 +24,10 @@
 		{
 			"Name": "CharacterAI",
 			"Enabled": false
+		},
+		{
+			"Name": "OnlineSubsystemSteam",
+			"Enabled": true
 		}
 	]
 }

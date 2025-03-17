@@ -11,23 +11,8 @@
   <component name="ChangeListManager">
     <list default="true" id="4e710cfb-38b1-44e9-a4d9-901b431aea3b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.FireBros.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FireBros.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/BP_Civilian.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/BP_Civilian.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/FireFighter/BP_FireFighter.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/FireFighter/BP_FireFighter.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Test/AxeToolBP.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Developers/gustavjohansson/Gustav_work.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Developers/gustavjohansson/Gustav_work.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Input/InputMap.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Input/InputMap.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/FireBros/AxeTool.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FireBros/AxeTool.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/FireBros/AxeTool.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FireBros/AxeTool.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/FireBros/CivilianCharacter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FireBros/CivilianCharacter.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/FireBros/CivilianCharacter.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FireBros/CivilianCharacter.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/FireBros/FireFighter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FireBros/FireFighter.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/FireBros/FireFighter.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FireBros/FireFighter.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/FireBros/PickUpActor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FireBros/PickUpActor.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/FireBros/PickUpActor.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FireBros/PickUpActor.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/FireBros/RagdollCharacter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FireBros/RagdollCharacter.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/FireBros/RagdollCharacter.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FireBros/RagdollCharacter.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/FireBros/Tool.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FireBros/Tool.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/FireBros/Tool.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FireBros/Tool.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FireBros.uproject" beforeDir="false" afterPath="$PROJECT_DIR$/FireBros.uproject" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -312,6 +297,9 @@
       <workItem from="1741777447254" duration="8054000" />
       <workItem from="1741862908721" duration="10101000" />
       <workItem from="1741957208280" duration="11785000" />
+      <workItem from="1742204808460" duration="850000" />
+      <workItem from="1742205821117" duration="612000" />
+      <workItem from="1742206508016" duration="663000" />
     </task>
     <servers />
   </component>

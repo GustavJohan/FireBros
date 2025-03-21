@@ -102,10 +102,6 @@ void AFireFighter::Tick(float DeltaSeconds)
 		{
 			SetCameraPositionOnClient(ragdollActor->GetActorLocation());
 		}
-		else
-		{
-			_CameraArmComponent->SetWorldLocation(ragdollActor->GetActorLocation() + FVector::UpVector*50);
-		}
 	}
 }
 
@@ -329,6 +325,7 @@ void AFireFighter::UseToolRPCToServerFromFireFighter_Implementation()
 
 void AFireFighter::SetCameraPositionOnClient_Implementation(FVector pos)
 {
+	_CameraArmComponent->SetWorldLocation(pos + FVector::UpVector*50);
 }
 
 

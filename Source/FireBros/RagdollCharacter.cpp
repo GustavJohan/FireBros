@@ -49,7 +49,9 @@ void ARagdollCharacter::beginRagdoll_Implementation(float ragdollTime)
 {
 	GetMesh()->SetVisibility(false);
 	_isRagDolling = true;
+	GetMovementComponent()->Deactivate();
 
+	
 	
 	GetWorld()->GetTimerManager().SetTimer(resetRagdoll, FTimerDelegate::CreateLambda(
 		[this] {endRagdoll();}), ragdollTime, false);
@@ -59,9 +61,11 @@ void ARagdollCharacter::beginRagdoll_Implementation(float ragdollTime)
 
 void ARagdollCharacter::endRagdoll_Implementation()
 {
+	GEngine->AddOnScreenDebugMessage(INDEX_NONE,5, FColor::Green, GetActorLocation().ToString());
 	
 	GetMesh()->SetVisibility(true);
 	_isRagDolling = false;
+	GetMovementComponent()->Activate();
 	
 	if (!ragdollActor){return;}
 	
@@ -76,7 +80,7 @@ void ARagdollCharacter::RagdollPickup()
 
 void ARagdollCharacter::RagdollThrowToServer_Implementation(FVector force)
 {
-	RagdollThrowMultiCast_Implementation(force);
+	RagdollThrowMultiCast(force);
 }
 
 

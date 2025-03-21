@@ -65,4 +65,5 @@ AEvacPoint* AGameManager::getClosestEvac(FVector position)
 	}
 
 	return closestEvac;
+
 }

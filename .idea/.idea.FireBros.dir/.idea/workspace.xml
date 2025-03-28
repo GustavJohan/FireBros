@@ -11,9 +11,11 @@
   <component name="ChangeListManager">
     <list default="true" id="4e710cfb-38b1-44e9-a4d9-901b431aea3b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.FireBros.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FireBros.dir/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/FirebrosGameInstance_BP.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/FirebrosGameInstance_BP.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Blueprints/Gamemode/BP_Gamemode.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Gamemode/BP_Gamemode.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FireBros.uproject" beforeDir="false" afterPath="$PROJECT_DIR$/FireBros.uproject" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/FireBros/GameManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FireBros/GameManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Gamemode/BP_OnlineMenu.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Gamemode/BP_OnlineMenu.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Test/TestMenu.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Test/TestMenu.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Widgets/MultiplayerMenuWidget_WBP.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Widgets/MultiplayerMenuWidget_WBP.uasset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,14 +26,98 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/Plugins/AdvancedSessions/Source/AdvancedSessions/Classes/AdvancedFriendsGameInstance.h" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Plugins/AdvancedSessions/Source/AdvancedSessions/Classes/AdvancedSessions.h" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Plugins/AdvancedSessions/Source/AdvancedSessions/Classes/AdvancedFriendsGameInstance.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Plugins/AdvancedSessions/Source/AdvancedSessions/Classes/AdvancedSessions.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Plugins/AdvancedSessions/Source/AdvancedSessions/Private/CreateSessionCallbackProxyAdvanced.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/FireBros/GameManager.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Source/FireBros/GameManager.h" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Source/FireBros/PickUpActor.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Source/FireBros/RagdollCharacter.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Source/FireBros/RagdollCharacter.h" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/FireBros/GameManager.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/FireBros/PickUpActor.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/FireBros/RagdollCharacter.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/FireBros/RagdollCharacter.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/Downloads/Zelda2/Assets/LODAsync.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="ProjectColorInfo">{
@@ -221,6 +307,12 @@
       <workItem from="1742206508016" duration="663000" />
       <workItem from="1742214718888" duration="2899000" />
       <workItem from="1742286820533" duration="903000" />
+      <workItem from="1742807345830" duration="9793000" />
+      <workItem from="1742891868758" duration="14256000" />
+      <workItem from="1742980420466" duration="6934000" />
+      <workItem from="1743068530415" duration="3499000" />
+      <workItem from="1743154029156" duration="772000" />
+      <workItem from="1743174491287" duration="2241000" />
     </task>
     <servers />
   </component>

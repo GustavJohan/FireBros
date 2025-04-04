@@ -320,7 +320,15 @@ void AFireFighter::UseToolAction(const FInputActionValue& Value)
 
 void AFireFighter::UseToolRPCToServerFromFireFighter_Implementation()
 {
-	Cast<ATool>(pickedUpItem)->UseToolToServer();
+	if (pickedUpItem)
+	{
+		Cast<ATool>(pickedUpItem)->UseToolToServer();
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow, "what?");
+	}
+	
 }
 
 void AFireFighter::SetCameraPositionOnClient_Implementation(FVector pos)

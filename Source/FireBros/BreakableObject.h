@@ -30,7 +30,12 @@ public:
 	UPROPERTY(VisibleAnywhere) UGeometryCollectionComponent* shatterObject		 = nullptr;
 
 	
-	UFUNCTION(Server, Reliable) void BreakObjectToServer();
+	UFUNCTION(Server, Reliable) void BreakObjectToServer(FVector direction);
 	
 	UFUNCTION(NetMulticast,Reliable) void BreakObjectMulticast(FVector direction);
+
+	UPROPERTY(Replicated) bool broken = false;
+	UPROPERTY(ReplicatedUsing=OnRep_Broken) FVector breakDirection = FVector::ForwardVector;
+	
+	UFUNCTION() void OnRep_Broken();
 };

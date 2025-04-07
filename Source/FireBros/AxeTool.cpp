@@ -42,7 +42,7 @@ void AAxeTool::UseToolToServer_Implementation()
 
 			ABreakableObject* objectToBreak = Cast<ABreakableObject>(HitObj);
 
-			objectToBreak->BreakObjectMulticast(direction);
+			objectToBreak->BreakObjectToServer(direction);
 			
 		}
 	}

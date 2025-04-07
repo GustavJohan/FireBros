@@ -6,6 +6,7 @@
 #include "GeometryCollection/GeometryCollectionComponent.h"
 #include "Components/BoxComponent.h"
 #include "Field/FieldSystemObjects.h"
+#include "Net/UnrealNetwork.h"
 
 // Sets default values
 ABreakableObject::ABreakableObject()
@@ -19,39 +20,50 @@ ABreakableObject::ABreakableObject()
 	shatterObject->SetupAttachment(surroundingCollider);
 }
 
+void ABreakableObject::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(ABreakableObject, broken);
+	DOREPLIFETIME(ABreakableObject, breakDirection);
+}
+
 // Called when the game starts or when spawned
 void ABreakableObject::BeginPlay()
 {
 	Super::BeginPlay();
-	//shatterObject->SetEnableDamageFromCollision(false);
 	shatterObject->ApplyAssetDefaults();
 	shatterObject->SetEnableDamageFromCollision(false);
 	shatterObject->SetSimulatePhysics(false);
-
-	//FTimerHandle breakTimer;
-	//GetWorld()->GetTimerManager().SetTimer(breakTimer, FTimerDelegate::CreateLambda(
-	//	[this] {BreakObject();}), 10.f, false);
-
-	//GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow, GetNetOwningPlayer()->GetName());
 }
 
 // Called every frame
 void ABreakableObject::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	//shatterObject->SetRelativeLocationAndRotation(surroundingCollider->GetRelativeLocation(), surroundingCollider->GetRelativeRotation());
 }
 
-void ABreakableObject::BreakObjectToServer_Implementation()
+void ABreakableObject::BreakObjectToServer_Implementation(FVector direction)
 {
 	GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow, "break to server");
 
 	
+	breakDirection = direction;
 	//BreakObjectMulticast();
+
+	broken = true;
+
+	OnRep_Broken();
 }
 
 void ABreakableObject::BreakObjectMulticast_Implementation(FVector direction)
 {
+
+}
+
+void ABreakableObject::OnRep_Broken()
+{
+	if (!broken){return;}
+	
 	shatterObject->SetSimulatePhysics(true);
 	shatterObject->SetEnableDamageFromCollision(true);
         	
@@ -76,10 +88,10 @@ void ABreakableObject::BreakObjectMulticast_Implementation(FVector direction)
 	ExplodingForce->Position = GetActorLocation();
 	ExplodingForce->Magnitude = 50;
 	shatterObject->ApplyPhysicsField(true, EGeometryCollectionPhysicsTypeEnum::Chaos_LinearVelocity, MetaData.Get(), ExplodingForce.Get());
-	GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow, direction.ToString());
+	GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow, breakDirection.ToString());
 
 	TObjectPtr<UUniformVector> pushingForce = NewObject<UUniformVector>();
 	pushingForce->Magnitude = 300;
-	pushingForce->Direction = direction;
+	pushingForce->Direction = breakDirection;
 	shatterObject->ApplyPhysicsField(true, EGeometryCollectionPhysicsTypeEnum::Chaos_LinearVelocity, MetaData.Get(), pushingForce);
 }

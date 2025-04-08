@@ -50,4 +50,12 @@ public:
 	UFUNCTION(BlueprintImplementableEvent) void RagdollThrowEvent();
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) USceneComponent*				_RagdollMeshAnchor  = nullptr;
+
+	UPROPERTY(ReplicatedUsing=OnRep_Health, BlueprintReadOnly) float Health = 100;
+
+	UFUNCTION()void OnRep_Health();
+
+	UFUNCTION(Server, Reliable) void DeathRagdoll();
+
+	UFUNCTION(BlueprintImplementableEvent) void RepHealthToBlueprint();
 };

@@ -35,10 +35,6 @@ void AFireFighterRagdoll::Tick(float DeltaTime)
 	{
 		_RagdollMesh->SetWorldTransform(GetActorTransform(), false, nullptr, ETeleportType::TeleportPhysics);
 	}
-	else
-	{
-		SetActorLocation(_RagdollMesh->GetComponentLocation());
-	}
 }
 
 void AFireFighterRagdoll::SetRagdollMesh(USkeletalMesh* mesh, ACharacter* OwningCharacter)

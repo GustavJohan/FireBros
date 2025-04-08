@@ -4,6 +4,8 @@
 #include "FireSphere.h"
 
 #include "FireManager.h"
+#include "RagdollCharacter.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -64,6 +66,22 @@ void AFireSphere::Tick(float DeltaTime)
 		if (!FireManager){FireManager = Cast<AFireManager>(UGameplayStatics::GetActorOfClass(GetWorld(), AFireManager::StaticClass()));}
 		FireManager->RemoveFullyGrownFire(this);
 		fullyGrown = false;
+	}
+
+	if (!UGameplayStatics::GetGameMode(GetWorld())){return;}
+	
+	TArray<AActor*> FireFighters;
+	FireCollider->GetOverlappingActors(FireFighters, ARagdollCharacter::StaticClass());
+
+	
+	if (!FireFighters.IsEmpty())
+	{
+		for (AActor* FireFighter : FireFighters)
+		{
+			ARagdollCharacter* hurtChar = Cast<ARagdollCharacter>(FireFighter);
+			hurtChar->Health-=DeltaTime*10;
+			hurtChar->OnRep_Health();
+		}
 	}
 }
 

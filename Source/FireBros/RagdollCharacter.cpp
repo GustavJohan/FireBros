@@ -4,6 +4,10 @@
 #include "RagdollCharacter.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/GameModeBase.h"
+#include "GameFramework/SpectatorPawn.h"
+#include "Kismet/GameplayStatics.h"
+#include "Net/UnrealNetwork.h"
 
 
 // Sets default values
@@ -12,6 +16,12 @@ ARagdollCharacter::ARagdollCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+}
+
+void ARagdollCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(ARagdollCharacter, Health);
 }
 
 // Called when the game starts or when spawned
@@ -94,4 +104,39 @@ void ARagdollCharacter::RagdollThrowMultiCast_Implementation(FVector force)
 		ragdollActor->AddRagdollImpulse(force);
 		
 	}
+}
+
+void ARagdollCharacter::OnRep_Health()
+{
+	RepHealthToBlueprint();
+
+	if (Health < 0)
+	{
+		GEngine->AddOnScreenDebugMessage(INDEX_NONE,5, FColor::Green, "dead!");
+		if (UGameplayStatics::GetGameMode(GetWorld()))
+		{
+			DeathRagdoll();
+		}
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(INDEX_NONE,5, FColor::Green, FString::SanitizeFloat(Health));
+	}
+}
+
+void ARagdollCharacter::DeathRagdoll_Implementation()
+{
+	if (!ragdollActor){return;}
+	if (GetController()->IsA<APlayerController>())
+	{
+		if (UGameplayStatics::GetGameMode(GetWorld()))
+		{
+			ASpectatorPawn* SpectatorPawn = Cast<ASpectatorPawn>(GetWorld()->SpawnActor(
+				UGameplayStatics::GetGameMode(GetWorld())->SpectatorClass));
+			SpectatorPawn->SetActorLocationAndRotation(GetActorLocation(), GetActorRotation());
+			GetController()->Possess(SpectatorPawn);
+		}
+	}
+	ragdollActor->BeginCharacterRagdoll();
+	this->Destroy();
 }

@@ -33,19 +33,13 @@ void AFireManager::BeginPlay()
 
 	if (!UGameplayStatics::GetGameMode(GetWorld())){return;}
 	
-	if (FireStartLocations.Num() != FireStartTimestamps.Num())
-	{
-		GEngine->AddOnScreenDebugMessage(INDEX_NONE,5, FColor::Green, "time stamps and locations not set");
-		return;
-	}
-	
-	for (int i = 0; i < FireStartLocations.Num(); ++i)
+	for (int i = 0; i < FireSpawnInfos.Num(); ++i)
 	{
 		FTimerHandle handle;
 		
-		FVector firelocation = FireStartLocations[i]->GetActorLocation();
+		FVector firelocation = FireSpawnInfos[i].FireStartLocation->GetActorLocation();
 
-		GetWorldTimerManager().SetTimer(handle, FTimerDelegate::CreateLambda([this, firelocation]{SpawnFireAtLocation(firelocation);}), FireStartTimestamps[i], false);
+		GetWorldTimerManager().SetTimer(handle, FTimerDelegate::CreateLambda([this, firelocation]{SpawnFireAtLocation(firelocation);}), FireSpawnInfos[i].FireStartTimestamp, false);
 		
 		fireLocationTimer.Add(handle);
 	}

@@ -8,6 +8,13 @@
 
 class AFireSphere;
 
+USTRUCT()
+struct FFireSpawnInfo
+{
+	GENERATED_BODY()
+	UPROPERTY(EditAnywhere) float FireStartTimestamp;
+	UPROPERTY(EditAnywhere) AActor* FireStartLocation = nullptr;
+};
 UCLASS()
 class FIREBROS_API AFireManager : public AActor
 {
@@ -40,9 +47,11 @@ public:
 	float FireSpreadClock;
 
 	//Empty actors that correspond to the positions that fire will be spawned in
-	UPROPERTY(EditAnywhere, Category="FireLocations") TArray<AActor*> FireStartLocations;
+	//UPROPERTY(EditAnywhere, Category="FireLocations") TArray<AActor*> FireStartLocations;
 	//amount of seconds that it will take for the fire to spawn
-	UPROPERTY(EditAnywhere, Category="FireLocations") TArray<float> FireStartTimestamps;
+	//UPROPERTY(EditAnywhere, Category="FireLocations") TArray<float> FireStartTimestamps;
+
+	UPROPERTY(EditAnywhere, Category="FireLocations") TArray<FFireSpawnInfo> FireSpawnInfos;
 
 	TArray<FTimerHandle> fireLocationTimer;
 

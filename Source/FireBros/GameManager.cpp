@@ -67,3 +67,14 @@ AEvacPoint* AGameManager::getClosestEvac(FVector position)
 	return closestEvac;
 
 }
+
+void AGameManager::WinGame()
+{
+	WinGameBP();
+}
+
+void AGameManager::LoseGame()
+{
+	LoseGameBP();
+}
+

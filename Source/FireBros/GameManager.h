@@ -28,4 +28,10 @@ public:
 	TArray<AEvacPoint*> EvacPoints;
 
 	AEvacPoint* getClosestEvac(FVector position);
+
+	void WinGame();
+	UFUNCTION(BlueprintImplementableEvent) void WinGameBP();
+	
+	void LoseGame();
+	UFUNCTION(BlueprintImplementableEvent) void LoseGameBP();
 };

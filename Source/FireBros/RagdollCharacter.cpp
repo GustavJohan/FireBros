@@ -3,9 +3,11 @@
 
 #include "RagdollCharacter.h"
 
+#include "FireFighter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/GameModeBase.h"
 #include "GameFramework/SpectatorPawn.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
 
@@ -133,7 +135,8 @@ void ARagdollCharacter::DeathRagdoll_Implementation()
 		{
 			ASpectatorPawn* SpectatorPawn = Cast<ASpectatorPawn>(GetWorld()->SpawnActor(
 				UGameplayStatics::GetGameMode(GetWorld())->SpectatorClass));
-			SpectatorPawn->SetActorLocationAndRotation(GetActorLocation(), GetActorRotation());
+			FVector CameraLocation = Cast<AFireFighter>(this)->_CameraArmComponent->GetSocketLocation(Cast<AFireFighter>(this)->_CameraArmComponent->SocketName );
+			SpectatorPawn->SetActorLocationAndRotation(CameraLocation, GetActorRotation());
 			GetController()->Possess(SpectatorPawn);
 		}
 	}

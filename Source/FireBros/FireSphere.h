@@ -29,6 +29,7 @@ public:
 	AFireManager* FireManager;
 
 	UPROPERTY(VisibleAnywhere) USphereComponent* FireCollider = nullptr;
+	UPROPERTY(VisibleAnywhere) USphereComponent* FireNavMeshCollider = nullptr;
 	UPROPERTY(VisibleAnywhere) UStaticMeshComponent* FireMesh = nullptr;
 	UPROPERTY(EditDefaultsOnly) float FireMeshScaler = 1;
 	UPROPERTY(EditDefaultsOnly) float MaxFireRadius = 200;

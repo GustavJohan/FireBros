@@ -4,7 +4,10 @@
 #include "FireManager.h"
 
 #include "FireSphere.h"
+#include "NavModifierVolume.h"
 #include "Kismet/GameplayStatics.h"
+#include "NavAreas/NavArea_Obstacle.h"
+#include "NavMesh/NavMeshBoundsVolume.h"
 
 // Sets default values
 AFireManager::AFireManager()
@@ -91,10 +94,18 @@ void AFireManager::SpreadFire_Implementation()
 
 		Fires.Add(Cast<AFireSphere>(GetWorld()->SpawnActor(fireClass, &spreadLocations[random])));
 	}
+
+	
 }
 
 void AFireManager::SpawnFireAtLocation_Implementation(FVector location)
 {
+
+	/*
+	ANavModifierVolume* AvoidVolume = Cast<ANavModifierVolume>(GetWorld()->SpawnActor(ANavModifierVolume::StaticClass(), &location));
+	AvoidVolume->SetAreaClass(UNavArea_Obstacle::StaticClass());
+	AvoidVolume->Brush.set
+	*/
 	
 	Fires.Add(Cast<AFireSphere>(GetWorld()->SpawnActor(fireClass, &location)));
 }

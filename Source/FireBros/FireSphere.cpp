@@ -19,6 +19,8 @@ AFireSphere::AFireSphere()
 	FireCollider->SetupAttachment(RootComponent);
 	FireMesh = CreateDefaultSubobject<UStaticMeshComponent>("Fire Mesh");
 	FireMesh->SetupAttachment(FireCollider);
+	FireNavMeshCollider = CreateDefaultSubobject<USphereComponent>("Fire Nav Mesh");
+	FireNavMeshCollider->SetupAttachment(FireCollider);
 }
 
 // Called when the game starts or when spawned
@@ -37,6 +39,9 @@ void AFireSphere::BeginPlay()
 	{
 		GroundLocation = GetActorLocation();
 	}
+
+	FireNavMeshCollider->SetSphereRadius(MaxFireRadius + 10);
+
 }
 
 // Called every frame
@@ -104,6 +109,7 @@ void AFireSphere::ChangeFireSize(float DeltaRadius)
 	FireCollider->SetSphereRadius(CurrentFireRadius);
 	//FireMesh->SetRelativeScale3D_Direct(FVector::One()*FireMeshScaler);
 	FireMesh->SetRelativeScale3D(FVector::One()*FireMeshScaler*CurrentFireRadius);
+	FireNavMeshCollider->SetRelativeLocation(FVector::DownVector*CurrentFireRadius);
 
 	if (CurrentFireRadius == 0)
 	{

@@ -19,16 +19,19 @@ AGameManager::AGameManager()
 void AGameManager::BeginPlay()
 {
 	Super::BeginPlay();
-	TArray<AActor*> CivilianCharacters;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACivilianCharacter::StaticClass(), CivilianCharacters);
+	TArray<AActor*> CivilianCharactersActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACivilianCharacter::StaticClass(), CivilianCharactersActors);
 	
-	for (auto CivilianCharacter : CivilianCharacters)
+	for (auto CivilianCharacter : CivilianCharactersActors)
 	{
 		ACivilianCharacter* Character = Cast<ACivilianCharacter>(CivilianCharacter);
 		Character->SpawnRagdollRPCToServer();
 		Character->SetOwner(GetOwner());
 		Character->GameManager = this;
+		CivilianCharacters.Add(Character);
 	}
+	
+	TotalCivilians = CivilianCharacters.Num();
 
 	TArray<AActor*> evacuationPoints;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEvacPoint::StaticClass(), evacuationPoints);
@@ -38,6 +41,7 @@ void AGameManager::BeginPlay()
 		AEvacPoint* EvacPoint = Cast<AEvacPoint, AActor>(point);
 		EvacPoints.Add(EvacPoint);  
 	}
+
 }
 
 // Called every frame
@@ -71,6 +75,7 @@ AEvacPoint* AGameManager::getClosestEvac(FVector position)
 void AGameManager::WinGame()
 {
 	WinGameBP();
+	GEngine->AddOnScreenDebugMessage(INDEX_NONE, 25.f, FColor::Yellow, "Win game");
 }
 
 void AGameManager::LoseGame()
@@ -78,3 +83,30 @@ void AGameManager::LoseGame()
 	LoseGameBP();
 }
 
+void AGameManager::CheckWin()
+{
+	int SavedCivilians = 0;
+
+	for (int i = 0; i < EvacPoints.Num(); ++i)
+	{
+		if (EvacPoints[i])
+		{
+			SavedCivilians += EvacPoints[i]->GetPresentCivilians();
+		}
+	}
+
+	UpdateScoreUI(SavedCivilians, TotalCivilians, CivilianCharacters.Num() - SavedCivilians);
+
+	// if all civilians are dead then the players lose
+	if (CivilianCharacters.Num() == 0)
+	{
+		LoseGame();
+	}
+
+	
+	//for now a win will be triggered if all civilians have evacuated
+	if (CivilianCharacters.Num() == SavedCivilians)
+	{
+		WinGame();
+	}
+}

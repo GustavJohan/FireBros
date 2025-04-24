@@ -22,7 +22,7 @@ void ALobbyGamemode::PostLogin(APlayerController* NewPlayer)
 	}
 	
 
-	
+	  
 	LobbyManager->AddPlayer(NewPlayer);
 	playerAmount++;
 	

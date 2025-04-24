@@ -29,4 +29,6 @@ public:
 	void Evacuate();
 
 	AGameManager* GameManager = nullptr;
+
+	bool rescued = false;
 };

@@ -42,5 +42,5 @@ void ACivilianCharacter::Evacuate()
 void ACivilianCharacter::endRagdoll()
 {
 	Super::endRagdoll();
-	Evacuate();
+	Evacuate();   
 }

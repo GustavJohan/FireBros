@@ -3,7 +3,9 @@
 
 #include "RagdollCharacter.h"
 
+#include "CivilianCharacter.h"
 #include "FireFighter.h"
+#include "GameManager.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/GameModeBase.h"
 #include "GameFramework/SpectatorPawn.h"
@@ -122,7 +124,7 @@ void ARagdollCharacter::OnRep_Health()
 	}
 	else
 	{
-		GEngine->AddOnScreenDebugMessage(INDEX_NONE,5, FColor::Green, FString::SanitizeFloat(Health));
+		//GEngine->AddOnScreenDebugMessage(INDEX_NONE,5, FColor::Green, FString::SanitizeFloat(Health));
 	}
 }
 
@@ -133,12 +135,20 @@ void ARagdollCharacter::DeathRagdoll_Implementation()
 	{
 		if (UGameplayStatics::GetGameMode(GetWorld()))
 		{
+			PlayerDie();
 			ASpectatorPawn* SpectatorPawn = Cast<ASpectatorPawn>(GetWorld()->SpawnActor(
 				UGameplayStatics::GetGameMode(GetWorld())->SpectatorClass));
 			FVector CameraLocation = Cast<AFireFighter>(this)->_CameraArmComponent->GetSocketLocation(Cast<AFireFighter>(this)->_CameraArmComponent->SocketName );
 			SpectatorPawn->SetActorLocationAndRotation(CameraLocation, GetActorRotation());
 			GetController()->Possess(SpectatorPawn);
 		}
+	}
+
+	if (IsA<ACivilianCharacter>())
+	{
+		AGameManager* Manager  = Cast<AGameManager>(UGameplayStatics::GetActorOfClass(GetWorld(), AGameManager::StaticClass()));
+		Manager->CivilianCharacters.Remove(Cast<ACivilianCharacter>(this));
+		Manager->CheckWin();
 	}
 	ragdollActor->BeginCharacterRagdoll();
 	this->Destroy();

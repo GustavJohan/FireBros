@@ -55,6 +55,8 @@ public:
 
 	UFUNCTION()void OnRep_Health();
 
+	UFUNCTION(BlueprintImplementableEvent) void PlayerDie();
+	
 	UFUNCTION(Server, Reliable) void DeathRagdoll();
 
 	UFUNCTION(BlueprintImplementableEvent) void RepHealthToBlueprint();

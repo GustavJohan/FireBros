@@ -6,6 +6,7 @@
 #include "CivilianCharacter.h"
 #include "EvacPoint.h"
 #include "Kismet/GameplayStatics.h"
+#include "Net/UnrealNetwork.h"
 
 // Sets default values
 AGameManager::AGameManager()
@@ -13,6 +14,12 @@ AGameManager::AGameManager()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+}
+
+void AGameManager::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(AGameManager, TimeRemaining);
 }
 
 // Called when the game starts or when spawned
@@ -42,6 +49,9 @@ void AGameManager::BeginPlay()
 		EvacPoints.Add(EvacPoint);  
 	}
 
+	if (!UGameplayStatics::GetGameMode(GetWorld())){return;}
+
+	GetWorldTimerManager().SetTimer(roundTimerHandle, FTimerDelegate::CreateLambda([this]{EvaluateWinEndOfRound();}), RoundTimer, false);
 }
 
 // Called every frame
@@ -74,12 +84,15 @@ AEvacPoint* AGameManager::getClosestEvac(FVector position)
 
 void AGameManager::WinGame()
 {
+	//GetWorldTimerManager().ClearAllTimersForObject(this); // this aparently does not work
+	GetWorldTimerManager().ClearTimer(roundTimerHandle);
 	WinGameBP();
-	GEngine->AddOnScreenDebugMessage(INDEX_NONE, 25.f, FColor::Yellow, "Win game");
 }
 
 void AGameManager::LoseGame()
 {
+	//GetWorldTimerManager().ClearAllTimersForObject(this); // this aparently does not work
+	GetWorldTimerManager().ClearTimer(roundTimerHandle);
 	LoseGameBP();
 }
 
@@ -109,4 +122,39 @@ void AGameManager::CheckWin()
 	{
 		WinGame();
 	}
+}
+
+void AGameManager::EvaluateWinEndOfRound()
+{
+	int SavedCivilians = 0;
+
+	for (int i = 0; i < EvacPoints.Num(); ++i)
+	{
+		if (EvacPoints[i])
+		{
+			SavedCivilians += EvacPoints[i]->GetPresentCivilians();
+		}
+	}
+
+	
+	if (TotalCivilians/2 >= SavedCivilians)
+	{
+		LoseGame();
+		return;
+	}
+
+	
+	
+	WinGame();
+}
+
+void AGameManager::SetTimerRemainingTime_Implementation()
+{
+	TimeRemaining = GetWorldTimerManager().GetTimerRemaining(roundTimerHandle);
+	OnRep_TimeRemaining();
+}
+
+void AGameManager::OnRep_TimeRemaining()
+{
+	OnRep_TimeRemainingToBlueprint(TimeRemaining);
 }

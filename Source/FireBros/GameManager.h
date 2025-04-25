@@ -41,4 +41,14 @@ public:
 	void CheckWin();
 
 	UFUNCTION(BlueprintImplementableEvent) void UpdateScoreUI(int saved, int totalCivilians, int remaining);
+
+	UPROPERTY(EditDefaultsOnly) float RoundTimer = 300;
+	FTimerHandle roundTimerHandle;
+
+	UFUNCTION() void EvaluateWinEndOfRound();
+
+	UPROPERTY(ReplicatedUsing=OnRep_TimeRemaining) float TimeRemaining = 0; 
+	UFUNCTION(Server, Reliable, BlueprintCallable) void SetTimerRemainingTime();
+	UFUNCTION() void OnRep_TimeRemaining();
+	UFUNCTION(BlueprintImplementableEvent) void OnRep_TimeRemainingToBlueprint(float newTime);
 };

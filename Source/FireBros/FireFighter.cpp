@@ -265,6 +265,8 @@ void AFireFighter::discardMulticast_Implementation()
 		{
 			cameraDelta += cameraMove;
 		}
+		cameraDelta.X *= throwModifier.X;
+		cameraDelta.Y *= throwModifier.Y;
 			
 		FVector throwDirection = GetActorRightVector() * cameraDelta.X + GetActorUpVector() * cameraDelta.Y;
 

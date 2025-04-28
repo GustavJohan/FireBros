@@ -5,6 +5,7 @@
 
 #include "CivilianCharacter.h"
 #include "EvacPoint.h"
+#include "FireFighter.h"
 #include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
 
@@ -84,17 +85,44 @@ AEvacPoint* AGameManager::getClosestEvac(FVector position)
 
 void AGameManager::WinGame()
 {
-	//GetWorldTimerManager().ClearAllTimersForObject(this); // this aparently does not work
-	GetWorldTimerManager().ClearTimer(roundTimerHandle);
+	ClearTimers();
 	WinGameBP();
 }
 
 void AGameManager::LoseGame()
 {
-	//GetWorldTimerManager().ClearAllTimersForObject(this); // this aparently does not work
-	GetWorldTimerManager().ClearTimer(roundTimerHandle);
+	ClearTimers();
 	LoseGameBP();
 }
+
+void AGameManager::ClearTimers()
+{
+	//clearing all potential timers in order to prevent a crash
+	GetWorldTimerManager().ClearTimer(roundTimerHandle);
+	TArray<AActor*> PlayerChars;
+                                                        
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AFireFighter::StaticClass(),PlayerChars);
+
+	for (auto PlayerChar : PlayerChars)
+	{
+		AFireFighter* FireFighter = Cast<AFireFighter>(PlayerChar);
+
+		if (FireFighter->HasRagdollTimer())
+		{
+			FireFighter->ClearTimer();
+		}
+	}
+
+	for (auto CivilianChar : CivilianCharacters)
+	{
+		if (CivilianChar->HasRagdollTimer())
+		{
+			CivilianChar->ClearTimer();
+		}
+	}
+                                                        	
+}
+
 
 void AGameManager::CheckWin()
 {

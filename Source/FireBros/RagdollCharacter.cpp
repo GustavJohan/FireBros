@@ -32,17 +32,25 @@ void ARagdollCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 void ARagdollCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	RagdollBackupLocation = GetActorLocation();
 }
 
 // Called every frame
 void ARagdollCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (!UGameplayStatics::GetGameMode(GetWorld())) {return;}
 	
 	if (ragdollActor && !_isRagDolling)
 	{
 		ragdollActor->SetActorLocationAndRotation(GetMesh()->GetComponentLocation(), GetMesh()->GetComponentRotation());
+	}
+
+	//if the character falls of the map then reset their location
+	if (GetActorLocation().Z < -1000)
+	{
+		SetActorLocation(RagdollBackupLocation);
 	}
 }
 
@@ -65,7 +73,7 @@ void ARagdollCharacter::beginRagdoll_Implementation(float ragdollTime)
 	_isRagDolling = true;
 	GetMovementComponent()->Deactivate();
 
-	
+	RagdollBackupLocation = GetActorLocation();
 	
 	GetWorld()->GetTimerManager().SetTimer(resetRagdoll, FTimerDelegate::CreateLambda(
 		[this] {endRagdoll();}), ragdollTime, false);
@@ -82,9 +90,18 @@ void ARagdollCharacter::endRagdoll_Implementation()
 	GetMovementComponent()->Activate();
 	
 	if (!ragdollActor){return;}
+
+	FVector groundLocation = ragdollActor->GetActorLocation();
+	
+	FHitResult groundCheck;
+	if (GetWorld()->LineTraceSingleByChannel(groundCheck, ragdollActor->GetActorLocation() + FVector::UpVector*90,
+		ragdollActor->GetActorLocation(), ECC_WorldStatic))
+	{
+		groundLocation = groundCheck.Location;
+	}
 	
 	ragdollActor->EndCharacterRagdoll();
-	SetActorLocation(ragdollActor->GetActorLocation());
+	SetActorLocation(groundLocation);
 }
 
 void ARagdollCharacter::RagdollPickup()
@@ -152,4 +169,14 @@ void ARagdollCharacter::DeathRagdoll_Implementation()
 	}
 	ragdollActor->BeginCharacterRagdoll();
 	this->Destroy();
+}
+
+bool ARagdollCharacter::HasRagdollTimer()
+{
+	return GetWorldTimerManager().IsTimerActive(resetRagdoll);
+}
+
+void ARagdollCharacter::ClearTimer_Implementation()
+{
+	GetWorldTimerManager().ClearTimer(resetRagdoll);
 }

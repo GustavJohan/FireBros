@@ -40,6 +40,8 @@ public:
 
 	void CheckWin();
 
+	void ClearTimers();
+
 	UFUNCTION(BlueprintImplementableEvent) void UpdateScoreUI(int saved, int totalCivilians, int remaining);
 
 	UPROPERTY(EditDefaultsOnly) float RoundTimer = 300;

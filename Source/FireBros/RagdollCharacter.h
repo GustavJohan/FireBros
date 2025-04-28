@@ -60,4 +60,9 @@ public:
 	UFUNCTION(Server, Reliable) void DeathRagdoll();
 
 	UFUNCTION(BlueprintImplementableEvent) void RepHealthToBlueprint();
+
+	bool HasRagdollTimer();
+	UFUNCTION(NetMulticast, Reliable) void ClearTimer();
+
+	FVector RagdollBackupLocation;
 };

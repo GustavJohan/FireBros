@@ -11,14 +11,20 @@
   <component name="ChangeListManager">
     <list default="true" id="4e710cfb-38b1-44e9-a4d9-901b431aea3b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.FireBros.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FireBros.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/BP_GameManager.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/BP_GameManager.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/BlockingStarterPack/Materials/Blocking/Basics/MI_DevOrange.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/BlockingStarterPack/Materials/Blocking/Basics/MI_DevOrange.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/BlockingStarterPack/Materials/Blocking/M_BlockingMaterial.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/BlockingStarterPack/Materials/Blocking/M_BlockingMaterial.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/BP_UIPlayerController.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/BP_UIPlayerController.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/FireFighter/BP_LobbyManequin.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/FireFighter/BP_LobbyManequin.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Gamemode/BP_LobbyGamemode.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Gamemode/BP_LobbyGamemode.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Test/BP_InstanceTest.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Test/BP_LobbyManager.uasset" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Blueprints/Test/Gustav_Testing.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Test/Gustav_Testing.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Test/TestMenu.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Test/TestMenu.umap" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FireBros.uproject" beforeDir="false" afterPath="$PROJECT_DIR$/FireBros.uproject" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/FireBros/FireFighter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FireBros/FireFighter.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/FireBros/GameManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FireBros/GameManager.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/FireBros/GameManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FireBros/GameManager.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/FireBros/RagdollCharacter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FireBros/RagdollCharacter.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/FireBros/RagdollCharacter.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FireBros/RagdollCharacter.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/FireBros/BreakableObject.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FireBros/BreakableObject.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/FireBros/BreakableObject.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FireBros/BreakableObject.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/FireBros/FireSphere.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FireBros/FireSphere.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/FireBros/Tool.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FireBros/Tool.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,6 +35,8 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
@@ -279,7 +287,7 @@
       <workItem from="1744875316471" duration="4709000" />
       <workItem from="1745483233986" duration="14509000" />
       <workItem from="1745566602730" duration="14236000" />
-      <workItem from="1745824715184" duration="6440000" />
+      <workItem from="1745824715184" duration="10252000" />
     </task>
     <servers />
   </component>

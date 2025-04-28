@@ -28,6 +28,7 @@ public:
 
 	UPROPERTY(VisibleAnywhere) UBoxComponent*				 surroundingCollider = nullptr;
 	UPROPERTY(VisibleAnywhere) UGeometryCollectionComponent* shatterObject		 = nullptr;
+	UPROPERTY(VisibleAnywhere) USceneComponent*				 ParentObject		 = nullptr;
 
 	
 	UFUNCTION(Server, Reliable) void BreakObjectToServer(FVector direction);

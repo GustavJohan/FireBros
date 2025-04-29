@@ -47,7 +47,7 @@ public:
 	UPROPERTY(EditDefaultsOnly) float RoundTimer = 300;
 	FTimerHandle roundTimerHandle;
 
-	UFUNCTION() void EvaluateWinEndOfRound();
+	UFUNCTION(BlueprintCallable) void EvaluateWinEndOfRound();
 
 	UPROPERTY(ReplicatedUsing=OnRep_TimeRemaining) float TimeRemaining = 0; 
 	UFUNCTION(Server, Reliable, BlueprintCallable) void SetTimerRemainingTime();

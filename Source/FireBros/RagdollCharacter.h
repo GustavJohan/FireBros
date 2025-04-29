@@ -41,15 +41,16 @@ public:
 	UPROPERTY(EditDefaultsOnly) TSubclassOf<AFireFighterRagdoll> ragdollActorClass;
 	UPROPERTY() AFireFighterRagdoll* ragdollActor;
 	
-	bool _isRagDolling = false;
+	UPROPERTY(BlueprintReadOnly)bool _isRagDolling = false;
 
 	UFUNCTION() virtual void RagdollPickup();
 	UFUNCTION(BlueprintImplementableEvent) void RagdollPickupEvent();
 	UFUNCTION(NetMulticast, Reliable) void RagdollThrowMultiCast(FVector force);
 	UFUNCTION(Server, Reliable) void RagdollThrowToServer(FVector force);
 	UFUNCTION(BlueprintImplementableEvent) void RagdollThrowEvent();
+
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) USceneComponent*				_RagdollMeshAnchor  = nullptr;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) USceneComponent*	_RagdollMeshAnchor  = nullptr;
 
 	UPROPERTY(ReplicatedUsing=OnRep_Health, BlueprintReadOnly) float Health = 100;
 

@@ -139,10 +139,6 @@ void ARagdollCharacter::OnRep_Health()
 			DeathRagdoll();
 		}
 	}
-	else
-	{
-		//GEngine->AddOnScreenDebugMessage(INDEX_NONE,5, FColor::Green, FString::SanitizeFloat(Health));
-	}
 }
 
 void ARagdollCharacter::DeathRagdoll_Implementation()

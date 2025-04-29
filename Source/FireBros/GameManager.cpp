@@ -141,14 +141,16 @@ void AGameManager::CheckWin()
 	// if all civilians are dead then the players lose
 	if (CivilianCharacters.Num() == 0)
 	{
-		LoseGame();
+		EvaluateWinEndOfRound();
+		//LoseGame();
 	}
 
 	
 	//for now a win will be triggered if all civilians have evacuated
 	if (CivilianCharacters.Num() == SavedCivilians)
 	{
-		WinGame();
+		EvaluateWinEndOfRound();
+		//WinGame();
 	}
 }
 

@@ -91,16 +91,12 @@ void AFireFighter::Tick(float DeltaSeconds)
 	
 	if (!ragdollActor){return;}
 
-	if (!_isRagDolling)
-	{
-		_CameraArmComponent->SetWorldLocation(GetActorLocation());
-		//ragdollActor->SetActorTransform(_RagdollMeshAnchor->GetComponentTransform(), false, nullptr, ETeleportType::TeleportPhysics);
-	}
-	else
+	if (_isRagDolling)
 	{
 		if (ragdollActor)
 		{
 			SetCameraPositionOnClient(ragdollActor->GetActorLocation());
+			SetActorLocation(ragdollActor->GetActorLocation());
 		}
 	}
 }

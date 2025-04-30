@@ -50,12 +50,6 @@ void AFireSphere::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	GrowFire(DeltaTime);
-	
-
-	for (auto Set : SpreadLocations)
-	{
-		DrawDebugSphere(GetWorld(), Set, 200, 8, FColor::Purple);
-	}
 
 	if (!UGameplayStatics::GetGameMode(GetWorld())){return;}
 	

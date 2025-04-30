@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "GameManager.generated.h"
 
+class ACivilianCharacter;
 class AEvacPoint;
 
 UCLASS()
@@ -26,6 +27,8 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	TArray<AEvacPoint*> EvacPoints;
+	TArray<ACivilianCharacter*> CivilianCharacters;
+	int TotalCivilians;
 
 	AEvacPoint* getClosestEvac(FVector position);
 
@@ -34,4 +37,20 @@ public:
 	
 	void LoseGame();
 	UFUNCTION(BlueprintImplementableEvent) void LoseGameBP();
+
+	void CheckWin();
+
+	void ClearTimers();
+
+	UFUNCTION(BlueprintImplementableEvent) void UpdateScoreUI(int saved, int totalCivilians, int remaining);
+
+	UPROPERTY(EditDefaultsOnly) float RoundTimer = 300;
+	FTimerHandle roundTimerHandle;
+
+	UFUNCTION(BlueprintCallable) void EvaluateWinEndOfRound();
+
+	UPROPERTY(ReplicatedUsing=OnRep_TimeRemaining) float TimeRemaining = 0; 
+	UFUNCTION(Server, Reliable, BlueprintCallable) void SetTimerRemainingTime();
+	UFUNCTION() void OnRep_TimeRemaining();
+	UFUNCTION(BlueprintImplementableEvent) void OnRep_TimeRemainingToBlueprint(float newTime);
 };

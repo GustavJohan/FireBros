@@ -39,6 +39,7 @@ public:
 	
 
 	UPROPERTY(EditDefaultsOnly, Category="Player Stat") int throwStrength = 100;
+	UPROPERTY(EditDefaultsOnly, Category="Player Stat") FVector2f throwModifier = FVector2f::One();
 	//UPROPERTY(ReplicatedUsing=RagDollActorSet) AFireFighterRagdoll* ragdollActor;
 	//UFUNCTION() void RagDollActorSet();
 	

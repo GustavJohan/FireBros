@@ -3,7 +3,10 @@
 
 #include "EvacPoint.h"
 
+#include "CivilianCharacter.h"
+#include "GameManager.h"
 #include "Components/BoxComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AEvacPoint::AEvacPoint()
@@ -12,6 +15,7 @@ AEvacPoint::AEvacPoint()
 	PrimaryActorTick.bCanEverTick = true;
 
 	EvacPointBounds = CreateDefaultSubobject<UBoxComponent>("bounds");
+	EvacPointBounds->OnComponentBeginOverlap.AddDynamic(this, &AEvacPoint::HandleBeginOverlap);
 }
 
 // Called when the game starts or when spawned
@@ -28,3 +32,25 @@ void AEvacPoint::Tick(float DeltaTime)
 
 }
 
+int AEvacPoint::GetPresentCivilians()
+{
+	TArray<AActor*> PresentCivilians;
+	EvacPointBounds->GetOverlappingActors(PresentCivilians, ACivilianCharacter::StaticClass());
+
+	return PresentCivilians.Num();
+}
+
+void AEvacPoint::HandleBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherActor->IsA<ACivilianCharacter>() && UGameplayStatics::GetGameMode(GetWorld()))
+	{
+		GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Yellow, "Update win status");
+		AActor* gamemanager = UGameplayStatics::GetActorOfClass(GetWorld(), AGameManager::StaticClass());
+		if (gamemanager)
+		{
+			Cast<AGameManager>(gamemanager)->CheckWin();
+		}
+		
+	}
+}

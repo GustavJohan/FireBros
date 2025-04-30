@@ -5,7 +5,9 @@
 
 #include "CivilianCharacter.h"
 #include "EvacPoint.h"
+#include "FireFighter.h"
 #include "Kismet/GameplayStatics.h"
+#include "Net/UnrealNetwork.h"
 
 // Sets default values
 AGameManager::AGameManager()
@@ -15,20 +17,29 @@ AGameManager::AGameManager()
 
 }
 
+void AGameManager::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(AGameManager, TimeRemaining);
+}
+
 // Called when the game starts or when spawned
 void AGameManager::BeginPlay()
 {
 	Super::BeginPlay();
-	TArray<AActor*> CivilianCharacters;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACivilianCharacter::StaticClass(), CivilianCharacters);
+	TArray<AActor*> CivilianCharactersActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACivilianCharacter::StaticClass(), CivilianCharactersActors);
 	
-	for (auto CivilianCharacter : CivilianCharacters)
+	for (auto CivilianCharacter : CivilianCharactersActors)
 	{
 		ACivilianCharacter* Character = Cast<ACivilianCharacter>(CivilianCharacter);
 		Character->SpawnRagdollRPCToServer();
 		Character->SetOwner(GetOwner());
 		Character->GameManager = this;
+		CivilianCharacters.Add(Character);
 	}
+	
+	TotalCivilians = CivilianCharacters.Num();
 
 	TArray<AActor*> evacuationPoints;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEvacPoint::StaticClass(), evacuationPoints);
@@ -38,6 +49,10 @@ void AGameManager::BeginPlay()
 		AEvacPoint* EvacPoint = Cast<AEvacPoint, AActor>(point);
 		EvacPoints.Add(EvacPoint);  
 	}
+
+	if (!UGameplayStatics::GetGameMode(GetWorld())){return;}
+
+	GetWorldTimerManager().SetTimer(roundTimerHandle, FTimerDelegate::CreateLambda([this]{EvaluateWinEndOfRound();}), RoundTimer, false);
 }
 
 // Called every frame
@@ -70,11 +85,106 @@ AEvacPoint* AGameManager::getClosestEvac(FVector position)
 
 void AGameManager::WinGame()
 {
+	ClearTimers();
 	WinGameBP();
 }
 
 void AGameManager::LoseGame()
 {
+	ClearTimers();
 	LoseGameBP();
 }
 
+void AGameManager::ClearTimers()
+{
+	//clearing all potential timers in order to prevent a crash
+	GetWorldTimerManager().ClearTimer(roundTimerHandle);
+	TArray<AActor*> PlayerChars;
+                                                        
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AFireFighter::StaticClass(),PlayerChars);
+
+	for (auto PlayerChar : PlayerChars)
+	{
+		AFireFighter* FireFighter = Cast<AFireFighter>(PlayerChar);
+
+		if (FireFighter->HasRagdollTimer())
+		{
+			FireFighter->ClearTimer();
+		}
+	}
+
+	for (auto CivilianChar : CivilianCharacters)
+	{
+		if (CivilianChar->HasRagdollTimer())
+		{
+			CivilianChar->ClearTimer();
+		}
+	}
+                                                        	
+}
+
+
+void AGameManager::CheckWin()
+{
+	int SavedCivilians = 0;
+
+	for (int i = 0; i < EvacPoints.Num(); ++i)
+	{
+		if (EvacPoints[i])
+		{
+			SavedCivilians += EvacPoints[i]->GetPresentCivilians();
+		}
+	}
+
+	UpdateScoreUI(SavedCivilians, TotalCivilians, CivilianCharacters.Num() - SavedCivilians);
+
+	// if all civilians are dead then the players lose
+	if (CivilianCharacters.Num() == 0)
+	{
+		EvaluateWinEndOfRound();
+		//LoseGame();
+	}
+
+	
+	//for now a win will be triggered if all civilians have evacuated
+	if (CivilianCharacters.Num() == SavedCivilians)
+	{
+		EvaluateWinEndOfRound();
+		//WinGame();
+	}
+}
+
+void AGameManager::EvaluateWinEndOfRound()
+{
+	int SavedCivilians = 0;
+
+	for (int i = 0; i < EvacPoints.Num(); ++i)
+	{
+		if (EvacPoints[i])
+		{
+			SavedCivilians += EvacPoints[i]->GetPresentCivilians();
+		}
+	}
+
+	
+	if (TotalCivilians/2 >= SavedCivilians)
+	{
+		LoseGame();
+		return;
+	}
+
+	
+	
+	WinGame();
+}
+
+void AGameManager::SetTimerRemainingTime_Implementation()
+{
+	TimeRemaining = GetWorldTimerManager().GetTimerRemaining(roundTimerHandle);
+	OnRep_TimeRemaining();
+}
+
+void AGameManager::OnRep_TimeRemaining()
+{
+	OnRep_TimeRemainingToBlueprint(TimeRemaining);
+}

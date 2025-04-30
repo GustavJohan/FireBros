@@ -24,7 +24,7 @@ void ATool::BeginPlay()
 			//Cast<UStaticMeshComponent>(Component)->OnComponentHit.AddDynamic(this, &ATool::DisablePhysicsSimulation);
 		}
 	}
-	
+	SnapToGround();
 }
 
 

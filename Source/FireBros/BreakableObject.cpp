@@ -14,8 +14,12 @@ ABreakableObject::ABreakableObject()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	
+	ParentObject = CreateDefaultSubobject<USceneComponent>("Parent");
+	ParentObject->SetupAttachment(RootComponent);
+	//RootComponent = ParentObject;
 	surroundingCollider = CreateDefaultSubobject<UBoxComponent>("Box");
-	surroundingCollider->SetupAttachment(RootComponent);
+	surroundingCollider->SetupAttachment(ParentObject);
 	shatterObject = CreateDefaultSubobject<UGeometryCollectionComponent>("Shatter object");
 	shatterObject->SetupAttachment(surroundingCollider);
 }

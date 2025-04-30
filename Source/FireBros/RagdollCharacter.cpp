@@ -3,7 +3,9 @@
 
 #include "RagdollCharacter.h"
 
+#include "CivilianCharacter.h"
 #include "FireFighter.h"
+#include "GameManager.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/GameModeBase.h"
 #include "GameFramework/SpectatorPawn.h"
@@ -30,17 +32,25 @@ void ARagdollCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 void ARagdollCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	RagdollBackupLocation = GetActorLocation();
 }
 
 // Called every frame
 void ARagdollCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (!UGameplayStatics::GetGameMode(GetWorld())) {return;}
 	
 	if (ragdollActor && !_isRagDolling)
 	{
 		ragdollActor->SetActorLocationAndRotation(GetMesh()->GetComponentLocation(), GetMesh()->GetComponentRotation());
+	}
+
+	//if the character falls of the map then reset their location
+	if (GetActorLocation().Z < -1000)
+	{
+		SetActorLocation(RagdollBackupLocation);
 	}
 }
 
@@ -63,7 +73,7 @@ void ARagdollCharacter::beginRagdoll_Implementation(float ragdollTime)
 	_isRagDolling = true;
 	GetMovementComponent()->Deactivate();
 
-	
+	RagdollBackupLocation = GetActorLocation();
 	
 	GetWorld()->GetTimerManager().SetTimer(resetRagdoll, FTimerDelegate::CreateLambda(
 		[this] {endRagdoll();}), ragdollTime, false);
@@ -80,9 +90,18 @@ void ARagdollCharacter::endRagdoll_Implementation()
 	GetMovementComponent()->Activate();
 	
 	if (!ragdollActor){return;}
+
+	FVector groundLocation = ragdollActor->GetActorLocation();
+	
+	FHitResult groundCheck;
+	if (GetWorld()->LineTraceSingleByChannel(groundCheck, ragdollActor->GetActorLocation() + FVector::UpVector*90,
+		ragdollActor->GetActorLocation(), ECC_WorldStatic))
+	{
+		groundLocation = groundCheck.Location;
+	}
 	
 	ragdollActor->EndCharacterRagdoll();
-	SetActorLocation(ragdollActor->GetActorLocation());
+	SetActorLocation(groundLocation);
 }
 
 void ARagdollCharacter::RagdollPickup()
@@ -120,10 +139,6 @@ void ARagdollCharacter::OnRep_Health()
 			DeathRagdoll();
 		}
 	}
-	else
-	{
-		GEngine->AddOnScreenDebugMessage(INDEX_NONE,5, FColor::Green, FString::SanitizeFloat(Health));
-	}
 }
 
 void ARagdollCharacter::DeathRagdoll_Implementation()
@@ -133,6 +148,7 @@ void ARagdollCharacter::DeathRagdoll_Implementation()
 	{
 		if (UGameplayStatics::GetGameMode(GetWorld()))
 		{
+			PlayerDie();
 			ASpectatorPawn* SpectatorPawn = Cast<ASpectatorPawn>(GetWorld()->SpawnActor(
 				UGameplayStatics::GetGameMode(GetWorld())->SpectatorClass));
 			FVector CameraLocation = Cast<AFireFighter>(this)->_CameraArmComponent->GetSocketLocation(Cast<AFireFighter>(this)->_CameraArmComponent->SocketName );
@@ -140,6 +156,23 @@ void ARagdollCharacter::DeathRagdoll_Implementation()
 			GetController()->Possess(SpectatorPawn);
 		}
 	}
+
+	if (IsA<ACivilianCharacter>())
+	{
+		AGameManager* Manager  = Cast<AGameManager>(UGameplayStatics::GetActorOfClass(GetWorld(), AGameManager::StaticClass()));
+		Manager->CivilianCharacters.Remove(Cast<ACivilianCharacter>(this));
+		Manager->CheckWin();
+	}
 	ragdollActor->BeginCharacterRagdoll();
 	this->Destroy();
+}
+
+bool ARagdollCharacter::HasRagdollTimer()
+{
+	return GetWorldTimerManager().IsTimerActive(resetRagdoll);
+}
+
+void ARagdollCharacter::ClearTimer_Implementation()
+{
+	GetWorldTimerManager().ClearTimer(resetRagdoll);
 }

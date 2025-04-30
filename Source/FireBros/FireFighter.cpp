@@ -91,16 +91,12 @@ void AFireFighter::Tick(float DeltaSeconds)
 	
 	if (!ragdollActor){return;}
 
-	if (!_isRagDolling)
-	{
-		_CameraArmComponent->SetWorldLocation(GetActorLocation());
-		//ragdollActor->SetActorTransform(_RagdollMeshAnchor->GetComponentTransform(), false, nullptr, ETeleportType::TeleportPhysics);
-	}
-	else
+	if (_isRagDolling)
 	{
 		if (ragdollActor)
 		{
 			SetCameraPositionOnClient(ragdollActor->GetActorLocation());
+			SetActorLocation(ragdollActor->GetActorLocation());
 		}
 	}
 }
@@ -265,7 +261,15 @@ void AFireFighter::discardMulticast_Implementation()
 		{
 			cameraDelta += cameraMove;
 		}
-			
+		cameraDelta.X *= throwModifier.X;
+		cameraDelta.Y *= throwModifier.Y;
+
+		//throwing downwards can cause ragdolls to clip through the floor. Since there is basically no reason to do it I decided to just prevent it altogether 
+		if (cameraDelta.Y < 0)
+		{
+			cameraDelta.Y = 0;
+		}
+		
 		FVector throwDirection = GetActorRightVector() * cameraDelta.X + GetActorUpVector() * cameraDelta.Y;
 
 		if (!GetController()){return;}

@@ -12,7 +12,7 @@ USTRUCT()
 struct FFireSpawnInfo
 {
 	GENERATED_BODY()
-	UPROPERTY(EditAnywhere) float FireStartTimestamp;
+	UPROPERTY(EditAnywhere) float FireStartTimestamp = 0.1f;
 	UPROPERTY(EditAnywhere) AActor* FireStartLocation = nullptr;
 };
 UCLASS()

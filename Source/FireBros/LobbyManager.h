@@ -12,7 +12,7 @@ struct FPlayerMannequinInformation
 	GENERATED_BODY()
 
 	UPROPERTY(BlueprintReadOnly)AActor* MannequinActor = nullptr;
-	UPROPERTY(BlueprintReadOnly)int MannequinSlot;
+	UPROPERTY(BlueprintReadOnly)int MannequinSlot = 0;
 };
 
 UCLASS()

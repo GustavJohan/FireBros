@@ -11,13 +11,7 @@
   <component name="ChangeListManager">
     <list default="true" id="4e710cfb-38b1-44e9-a4d9-901b431aea3b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.FireBros.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FireBros.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/BP_GameManager.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/BP_GameManager.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/BP_PlayerController.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/BP_PlayerController.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/FireFighter/BP_FireFighter.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/FireFighter/BP_FireFighter.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Gamemode/BP_Gamemode.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Gamemode/BP_Gamemode.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Test/Gustav_Testing.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Test/Gustav_Testing.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Widgets/HostLobbyWidget_WBP.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Widgets/HostLobbyWidget_WBP.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Levels/MainMenu.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Levels/MainMenu.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FireBros.uproject" beforeDir="false" afterPath="$PROJECT_DIR$/FireBros.uproject" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -260,6 +254,8 @@
       <workItem from="1746027754013" duration="779000" />
       <workItem from="1746176275561" duration="700000" />
       <workItem from="1746182617031" duration="1454000" />
+      <workItem from="1746532603840" duration="1286000" />
+      <workItem from="1746536158633" duration="697000" />
     </task>
     <servers />
   </component>

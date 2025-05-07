@@ -53,4 +53,6 @@ public:
 	UFUNCTION(Server, Reliable, BlueprintCallable) void SetTimerRemainingTime();
 	UFUNCTION() void OnRep_TimeRemaining();
 	UFUNCTION(BlueprintImplementableEvent) void OnRep_TimeRemainingToBlueprint(float newTime);
+
+	bool roundEnded = false;
 };

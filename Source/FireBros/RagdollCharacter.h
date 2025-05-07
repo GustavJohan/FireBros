@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "FireFighterRagdoll.h"
+#include "GameManager.h"
 #include "RagdollCharacter.generated.h"
 
 UCLASS()
@@ -66,4 +67,7 @@ public:
 	UFUNCTION(NetMulticast, Reliable) void ClearTimer();
 
 	FVector RagdollBackupLocation;
+
+	
+	UPROPERTY()AGameManager* GameManager = nullptr;
 };

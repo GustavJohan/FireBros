@@ -33,6 +33,7 @@ void ARagdollCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	RagdollBackupLocation = GetActorLocation();
+	
 }
 
 // Called every frame
@@ -74,10 +75,15 @@ void ARagdollCharacter::beginRagdoll_Implementation(float ragdollTime)
 	GetMovementComponent()->Deactivate();
 
 	RagdollBackupLocation = GetActorLocation();
+	if (!ragdollActor){return;}
+	
+	if (!GameManager){GameManager = Cast<AGameManager>(UGameplayStatics::GetActorOfClass(GetWorld(), AGameManager::StaticClass()));}
+	if (GameManager->roundEnded){return;}
+
 	
 	GetWorld()->GetTimerManager().SetTimer(resetRagdoll, FTimerDelegate::CreateLambda(
 		[this] {endRagdoll();}), ragdollTime, false);
-	if (!ragdollActor){return;}
+	
 	ragdollActor->BeginCharacterRagdoll();
 }
 
@@ -159,9 +165,8 @@ void ARagdollCharacter::DeathRagdoll_Implementation()
 
 	if (IsA<ACivilianCharacter>())
 	{
-		AGameManager* Manager  = Cast<AGameManager>(UGameplayStatics::GetActorOfClass(GetWorld(), AGameManager::StaticClass()));
-		Manager->CivilianCharacters.Remove(Cast<ACivilianCharacter>(this));
-		Manager->CheckWin();
+		GameManager->CivilianCharacters.Remove(Cast<ACivilianCharacter>(this));
+		GameManager->CheckWin();
 	}
 	ragdollActor->BeginCharacterRagdoll();
 	this->Destroy();

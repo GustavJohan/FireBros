@@ -28,7 +28,5 @@ class FIREBROS_API ACivilianCharacter : public ARagdollCharacter
 public:
 	void Evacuate();
 
-	AGameManager* GameManager = nullptr;
-
 	bool rescued = false;
 };

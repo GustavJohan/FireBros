@@ -97,6 +97,7 @@ void AGameManager::LoseGame()
 
 void AGameManager::ClearTimers()
 {
+	roundEnded = true;
 	//clearing all potential timers in order to prevent a crash
 	GetWorldTimerManager().ClearTimer(roundTimerHandle);
 	TArray<AActor*> PlayerChars;
@@ -127,7 +128,7 @@ void AGameManager::ClearTimers()
 void AGameManager::CheckWin()
 {
 	int SavedCivilians = 0;
-
+	
 	for (int i = 0; i < EvacPoints.Num(); ++i)
 	{
 		if (EvacPoints[i])

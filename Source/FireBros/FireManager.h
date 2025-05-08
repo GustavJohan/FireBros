@@ -58,4 +58,6 @@ public:
 	UFUNCTION(Server, Reliable) void SpawnFireAtLocation(FVector location);
 
 	UFUNCTION(Server, Reliable) void DestroyFireToServer(AFireSphere* sphere);
+
+	void ClearTimers();
 };

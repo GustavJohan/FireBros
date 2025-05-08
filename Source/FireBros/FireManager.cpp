@@ -109,3 +109,11 @@ void AFireManager::DestroyFireToServer_Implementation(AFireSphere* sphere)
 	Fires.Remove(sphere);
 	sphere->Destroy();
 }
+
+void AFireManager::ClearTimers()
+{
+	for (auto handle : fireLocationTimer)
+	{
+		GetWorldTimerManager().ClearTimer(handle);
+	}
+}

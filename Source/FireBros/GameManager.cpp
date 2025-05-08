@@ -6,6 +6,7 @@
 #include "CivilianCharacter.h"
 #include "EvacPoint.h"
 #include "FireFighter.h"
+#include "FireManager.h"
 #include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
 
@@ -121,7 +122,8 @@ void AGameManager::ClearTimers()
 			CivilianChar->ClearTimer();
 		}
 	}
-                                                        	
+
+	Cast<AFireManager>(UGameplayStatics::GetActorOfClass(GetWorld(), AFireManager::StaticClass()))->ClearTimers();
 }
 
 

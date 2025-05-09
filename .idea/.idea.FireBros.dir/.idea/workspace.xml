@@ -11,12 +11,8 @@
   <component name="ChangeListManager">
     <list default="true" id="4e710cfb-38b1-44e9-a4d9-901b431aea3b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.FireBros.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FireBros.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/FirebrosGameInstance_BP.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/FirebrosGameInstance_BP.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Test/Gustav_Testing.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Test/Gustav_Testing.umap" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FireBros.uproject" beforeDir="false" afterPath="$PROJECT_DIR$/FireBros.uproject" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/FireBros/FireManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FireBros/FireManager.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/FireBros/FireManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FireBros/FireManager.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/FireBros/GameManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FireBros/GameManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/FireBros/RagdollCharacter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FireBros/RagdollCharacter.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -261,7 +257,8 @@
       <workItem from="1746540725654" duration="1257000" />
       <workItem from="1746542633899" duration="741000" />
       <workItem from="1746604838442" duration="5471000" />
-      <workItem from="1746694243666" duration="5523000" />
+      <workItem from="1746694243666" duration="6930000" />
+      <workItem from="1746780437185" duration="647000" />
     </task>
     <servers />
   </component>

@@ -157,8 +157,11 @@ void ARagdollCharacter::DeathRagdoll_Implementation()
 			PlayerDie();
 			ASpectatorPawn* SpectatorPawn = Cast<ASpectatorPawn>(GetWorld()->SpawnActor(
 				UGameplayStatics::GetGameMode(GetWorld())->SpectatorClass));
-			FVector CameraLocation = Cast<AFireFighter>(this)->_CameraArmComponent->GetSocketLocation(Cast<AFireFighter>(this)->_CameraArmComponent->SocketName );
-			SpectatorPawn->SetActorLocationAndRotation(CameraLocation, GetActorRotation());
+			FVector CameraLocation = FVector::Zero();
+			FRotator CameraRotation = FRotator::ZeroRotator;
+			
+			Cast<AFireFighter>(this)->_CameraArmComponent->GetSocketWorldLocationAndRotation(Cast<AFireFighter>(this)->_CameraArmComponent->SocketName , CameraLocation, CameraRotation);
+			SpectatorPawn->SetActorLocationAndRotation(CameraLocation, CameraRotation);
 			GetController()->Possess(SpectatorPawn);
 		}
 	}
